@@ -12,6 +12,45 @@ https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-wi
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r, eval=FALSE}
+library(car)
+library(ggplot2)
+library(dplyr)
+library(gsheet)
+library(gridExtra)
+library("htmltools")
+library(reshape2)
+library(granova)
+
+url <- 'https://docs.google.com/a/rmit.edu.au/spreadsheets/d/1TKheFqO-s6zVLSYuI3yaMuhZQ1hLo3R5o1caf3gMVro/edit?usp=sharing'
+
+ds <- gsheet2tbl(url)
+```
+
+
+```{r cars}
+install.packages("gdata")
+library(gdata)
+
+
+
+https://docs.google.com/a/rmit.edu.au/spreadsheets/d/1TKheFqO-s6zVLSYuI3yaMuhZQ1hLo3R5o1caf3gMVro/edit?usp=sharing
+
+prl <- gdata:::findPerl("perl")
+url2 <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00342/Data_Cortex_Nuclear.xls"
+
+ds <- read.xls(url2, perl = '/usr/bin/perl')
+
+install.packages("readxl")
+library("readxl")
+
+ds <- read_excel(url2)
+
+```
+
+
+
 ## R Markdown
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
