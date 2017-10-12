@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r, eval=FALSE}
+library(GGally)
 library(car)
 library(ggplot2)
 library(dplyr)
@@ -50,6 +51,28 @@ ds$MouseID <- MouseID
 ```{r cchecking the data - ds$MouseID cleaned, echo = TRUE}
 table(ds$MouseID)
 ```
+
+```{r cchecking the data - ds$MouseID cleaned, echo = TRUE}
+library(ggplot2)
+ggpairs(with(ds, data.frame(MouseID, ITSN1_N)))
+```
+
+http://www.rpubs.com/smcclatchy/scatterplots
+http://www.sthda.com/english/wiki/ggally-r-package-extension-to-ggplot2-for-correlation-matrix-and-survival-plots-r-software-and-data-visualization
+https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html
+http://rmarkdown.rstudio.com/lesson-3.html
+http://rmarkdown.rstudio.com/authoring_rcodechunks.html
+
+
+
+
+mega_iris = data.frame(gg1$all, Species=rep(iris$Species, length=nrow(gg1$all)))
+ggplot(mega_iris, aes_string(x = "x", y = "y")) + 
+  facet_grid(xvar ~ yvar, scales = "free") + 
+  geom_point(aes(colour=Species), na.rm = TRUE, alpha=0.8) + 
+  stat_density(aes(x = x, y = ..scaled.. * diff(range(x)) + min(x)), 
+               data = gg1$densities, position = "identity", 
+               colour = "grey20", geom = "line")
 
 ## R Markdown
 
