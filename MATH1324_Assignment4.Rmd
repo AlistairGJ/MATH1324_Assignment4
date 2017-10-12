@@ -23,33 +23,33 @@ library("htmltools")
 library(reshape2)
 library(granova)
 
-url <- 'https://docs.google.com/a/rmit.edu.au/spreadsheets/d/1TKheFqO-s6zVLSYuI3yaMuhZQ1hLo3R5o1caf3gMVro/edit?usp=sharing'
-
+url <- 'https://docs.google.com/spreadsheets/d/158zPd4XCYoaXNzHA2OJPkOmzSWYjwFoEuOiMzV1O-rU/edit?usp=sharing'
 ds <- gsheet2tbl(url)
 ```
 
 
-```{r cars}
-install.packages("gdata")
-library(gdata)
-
-
-
-https://docs.google.com/a/rmit.edu.au/spreadsheets/d/1TKheFqO-s6zVLSYuI3yaMuhZQ1hLo3R5o1caf3gMVro/edit?usp=sharing
-
-prl <- gdata:::findPerl("perl")
-url2 <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00342/Data_Cortex_Nuclear.xls"
-
-ds <- read.xls(url2, perl = '/usr/bin/perl')
-
-install.packages("readxl")
-library("readxl")
-
-ds <- read_excel(url2)
-
+```{r checking the data - summary, echo = TRUE}
+summary(ds)
 ```
 
+```{r checking the data - column names, echo = TRUE}
+column_names <- colnames(ds)
+column_names
+```
 
+```{r checking the data - MouseID, echo = TRUE}
+MouseID <- ds$MouseID
+MouseID
+```
+
+```{r cleaning the data - Stripping MouseID_n, echo = TRUE}
+MouseID <- gsub("\\_.*", "", ds$MouseID)
+ds$MouseID <- MouseID
+```
+
+```{r cchecking the data - ds$MouseID cleaned, echo = TRUE}
+table(ds$MouseID)
+```
 
 ## R Markdown
 
