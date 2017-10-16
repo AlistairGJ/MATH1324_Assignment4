@@ -1,8 +1,10 @@
 ---
-title: "MATH1324_Assignment_4"
+title: "MATH1324_Assignment4"
 author: "AlistairGJ"
 date: "07/10/2017"
-output: html_document
+output:
+  html_notebook: default
+  pdf_document: default
 ---
 
 Plots for protein expression
@@ -48,7 +50,7 @@ MouseID <- gsub("\\_.*", "", ds$MouseID)
 ds$MouseID <- MouseID
 ```
 
-```{r cchecking the data - ds$MouseID cleaned, echo = TRUE}
+```{r checking the data - ds$MouseID cleaned, echo = TRUE}
 table(ds$MouseID)
 ```
 
