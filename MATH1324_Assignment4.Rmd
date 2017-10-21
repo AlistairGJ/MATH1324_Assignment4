@@ -108,45 +108,37 @@ target_attributes_all <- c("MouseID", "ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", 
 target_attributes_proteins <- c("ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N",
                            "pNUMB_N", "S6_N", "SOD1_N")
 ```
-
-
-
-
 ### Make list of desired
-
-
-
 ```{r, echo = TRUE}
 ds_filtered <- ds[,target_attributes_all]
 ```
-
 ### Visualization MUST CLEAN FIRST
 ```{r, echo = TRUE}
 ggpairs(ds_filtered[,target_attributes_proteins])
 ```
 
-
 Justification - "Because their is such a mix of mice (8 groups) filter for outliers based mean of each group"
-
 Step 1 - Fill NaN (with group mean)
 Step 2 - Remove outliers (group mean)
 
 a. Need to find mean of each group
-
 * We need a count here
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
+categorical_counts <- ds_filtered[,10:13]
+unique(categorical_counts)
+```
+```{r, echo=TRUE}
 table(ds_filtered$Genotype)
 ```
-
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 table(ds_filtered$Treatment)
 ```
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 table(ds_filtered$Behavior)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 table(ds_filtered$class)
 ```
 
@@ -201,8 +193,6 @@ which(is.na(ds_filled_NaN), arr.ind=TRUE)
 
 ### Begin box plots (detect and deal with outliers)
 ### All 8 classes per 9 target proteins OR ...?
-
-
 
 ```{r, echo=FALSE}
 native_proteins_summary <- summary(ds_filtered[,target_attributes_proteins])
@@ -294,27 +284,60 @@ SOD1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=SOD1_N, f
 grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 ```
 
-
-
 * Discuss hist and also talk about number of point (sample, population, QQ plots ...)
 
 ### Visualization MUST CLEAN FIRST
-```{r, echo = TRUE}
-ggpairs(data = ds_filled_NaN[,target_attributes_proteins])
-
-ggpairs(data = ds_filled_NaN, # data.frame with variables
+```{r, echo = FALSE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
         columns = target_attributes_proteins, # columns to plot, default to all.
-        title = "tips data", # title of the plot
-        mapping = aes(colour = class))  # aesthetics, ggplot2 style
+        #title = "", # title of the plot
+        mapping = aes(colour = class), # aesthetics, ggplot2 style
+        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
+        combo = wrap("dot", alpha = 0.6, size = 0.2)))
+scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       #axis.text.x = element_text(margin = margin(t = 0.2), vjust = 0.5), 
+                       #axis.text.y = element_text(margin = margin(r = 0.2), hjust = 0.5),
+                       #axis.title.x = element_text(size = 0.5, angle = 90),
+                       strip.text = element_text(face = "bold", size=7),
+                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
+                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
+```
+
+## MOUSE 3484 = OUTLIER REMOVAL BELOW
+```{r, echo = TRUE}
+ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
 ```
 
 
-```{r, echo = TRUE}
-ggpairs(data = ds_filled_NaN, # data.frame with variables
-        columns = target_attributes_proteins, # columns to plot, default to all.
-        title = "tips data", # title of the plot
-        mapping = aes(colour = class)) # aesthetics, ggplot2 style
+```{r, echo=FALSE}
+ARC_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ARC_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "ARC_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
 ```
+```{r, echo=FALSE}
+BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "BRAF_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+
+```{r, echo=FALSE}
+grid.arrange(ARC_N_Hist, BRAF_N_Hist, nrow = 2)
+```
+
+
+
+
+
+
 
 
 ```{r, echo=FALSE}
@@ -435,5 +458,112 @@ ds_filtered <- ds_filtered[c(988, 989, 990),"BRAF_N"] == 0.2867
 dataset <- matrix(sample(c(NA, 1:5), 25, replace = TRUE), 5);
 data <- as.data.frame(dataset)
 ```
+
+
+
+our_summary <- 
+  with(categorical_counts, 
+       list("Genotype" = table(categorical_counts[,1]),
+            "Treatment" = table(ds_filtered$Treatment),
+            "Behavior" = table(ds_filtered$Behavior),
+            "class" = table(ds_filtered$class)
+            ))
+our_summary
+
+
+
+theme_gray
+function (base_size = 11, base_family = "") 
+{
+ half_line <- base_size/2
+theme(
+  line = element_line(colour = "black", size = 0.5, 
+                      linetype = 1, lineend = "butt"), 
+  rect = element_rect(fill = "white", colour = "black",
+                      size = 0.5, linetype = 1),
+  text = element_text(family = base_family, face = "plain",
+                      colour = "black", size = base_size,
+                      lineheight = 0.9,  hjust = 0.5,
+                      vjust = 0.5, angle = 0, 
+                      margin = margin(), debug = FALSE), 
+  
+  axis.line = element_blank(), 
+  axis.text = element_text(size = rel(0.8), colour = "grey30"),
+  axis.text.x = element_text(margin = margin(t = 0.8*half_line/2), 
+                             vjust = 1), 
+  axis.text.y = element_text(margin = margin(r = 0.8*half_line/2),
+                             hjust = 1),
+  axis.ticks = element_line(colour = "grey20"), 
+  axis.ticks.length = unit(half_line/2, "pt"), 
+  axis.title.x = element_text(margin = margin(t = 0.8 * half_line,
+                                          b = 0.8 * half_line/2)),
+  axis.title.y = element_text(angle = 90, 
+                              margin = margin(r = 0.8 * half_line,
+                                          l = 0.8 * half_line/2)),
+  
+  legend.background = element_rect(colour = NA), 
+  legend.margin = unit(0.2, "cm"), 
+  legend.key = element_rect(fill = "grey95", colour = "white"),
+  legend.key.size = unit(1.2, "lines"), 
+  legend.key.height = NULL,
+  legend.key.width = NULL, 
+  legend.text = element_text(size = rel(0.8)),
+  legend.text.align = NULL,
+  legend.title = element_text(hjust = 0), 
+  legend.title.align = NULL, 
+  legend.position = "right", 
+  legend.direction = NULL,
+  legend.justification = "center", 
+  legend.box = NULL, 
+  
+  panel.background = element_rect(fill = "grey92", colour = NA),
+  panel.border = element_blank(), 
+  panel.grid.major = element_line(colour = "white"), 
+  panel.grid.minor = element_line(colour = "white", size = 0.25), 
+  panel.margin = unit(half_line, "pt"), panel.margin.x = NULL, 
+  panel.margin.y = NULL, panel.ontop = FALSE, 
+  
+  strip.background = element_rect(fill = "grey85", colour = NA),
+  strip.text = element_text(colour = "grey10", size = rel(0.8)),
+  strip.text.x = element_text(margin = margin(t = half_line,
+                                              b = half_line)), 
+  strip.text.y = element_text(angle = -90, 
+                              margin = margin(l = half_line, 
+                                              r = half_line)),
+  strip.switch.pad.grid = unit(0.1, "cm"),
+  strip.switch.pad.wrap = unit(0.1, "cm"), 
+  
+  plot.background = element_rect(colour = "white"), 
+  plot.title = element_text(size = rel(1.2), 
+                            margin = margin(b = half_line * 1.2)),
+  plot.margin = margin(half_line, half_line, half_line, half_line),
+  complete = TRUE)
+}
+
++ theme_linedraw()
+
+axis.text = element_text(size = rel(0.6), colour = "grey30")
+
+
+```{r, echo = TRUE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
+        columns = target_attributes_proteins, # columns to plot, default to all.
+        #title = "", # title of the plot
+        mapping = aes(colour = class), # aesthetics, ggplot2 style
+        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = 0.3, size = 0.1), 
+                     combo = wrap("dot", alpha = 0.4, size=0.2)))
+scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       #axis.text.x = element_text(margin = margin(t = 0.2), vjust = 0.5), 
+                       #axis.text.y = element_text(margin = margin(r = 0.2), hjust = 0.5),
+                       #axis.title.x = element_text(size = 0.5, angle = 90),
+                       strip.text=element_text(size=6))
+```
+
+
+
+
+
 
 
