@@ -287,7 +287,7 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 * Discuss hist and also talk about number of point (sample, population, QQ plots ...)
 
 ### Visualization MUST CLEAN FIRST
-```{r, echo = FALSE}
+```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
 scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
         columns = target_attributes_proteins, # columns to plot, default to all.
         #title = "", # title of the plot
@@ -295,6 +295,7 @@ scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
         upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
         lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
         combo = wrap("dot", alpha = 0.6, size = 0.2)))
+
 scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
                        axis.text = element_text(size = rel(0.5)),
                        #axis.text.x = element_text(margin = margin(t = 0.2), vjust = 0.5), 
@@ -303,6 +304,7 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
                        strip.text = element_text(face = "bold", size=7),
                        strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
                        strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
 
@@ -334,10 +336,85 @@ grid.arrange(ARC_N_Hist, BRAF_N_Hist, nrow = 2)
 ```
 
 
+```{r, echo=FALSE}
+DYRK1A_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=DYRK1A_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "DYRK1A_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+```{r, echo=FALSE}
+ITSN1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ITSN1_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "ITSN1_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
 
+```{r, echo=FALSE}
+grid.arrange(DYRK1A_N_Hist, ITSN1_N_Hist, nrow = 2)
+```
 
+```{r, echo=FALSE}
+pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "pERK_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+```{r, echo=FALSE}
+pNUMB_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pNUMB_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "pNUMB_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
 
+```{r, echo=FALSE}
+grid.arrange(pERK_N_Hist, pNUMB_N_Hist, nrow = 2)
+```
 
+```{r, echo=FALSE}
+S6_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=S6_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "S6_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+```{r, echo=FALSE}
+SOD1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=SOD1_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "SOD1_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+
+```{r, echo=FALSE}
+grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
+```
+
+### Visualization MUST CLEAN FIRST
+```{r, echo = FALSE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
+        columns = target_attributes_proteins, # columns to plot, default to all.
+        #title = "", # title of the plot
+        mapping = aes(colour = class), # aesthetics, ggplot2 style
+        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
+        combo = wrap("dot", alpha = 0.6, size = 0.2)))
+scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       strip.text = element_text(face = "bold", size=7),
+                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
+                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
+```
 
 
 ```{r, echo=FALSE}
