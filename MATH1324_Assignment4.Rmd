@@ -400,7 +400,7 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 ```
 
 ### Visualization MUST CLEAN FIRST
-```{r, echo = FALSE}
+```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
 scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
         columns = target_attributes_proteins, # columns to plot, default to all.
         #title = "", # title of the plot
@@ -416,6 +416,28 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
 
+SCATTER PLOTS
+- Based on CLASS
+* ITSN1_N vs DYRK1A_N
+* pERK_N vs DYRK1A_N
+* pERK_N vs ITSN1_N
+- Enlarged Scatter w/ tansparent hist
+- The value is that it is applicable accross all class, genotypes e.t.c, so these proteins aren't amenable to changes in profile accross the experimental conditions described / explored.
+
+BAR CHARTS
+- Based on CLASS
+- Identify trends easily
+* ITSN1_N - CS is elavated, SC is depressed - compare t-tests (independent & dependent)
+* SOD1_N - Interesting from the point of distribution... CS is depressed, SC is elavated - compare t-test
+* Any paired t-tests for mouse to mouse will be interesting
+* Will break down by mice, then compare
+two mice from same class
+two mice from same treatment
+two mice from same genotype
+two mice from same behavior
+for one target protein
+
+SHOULD I COMBINE BAR INTO MATRIX? Can't seem to do this.
 
 ```{r, echo=FALSE}
 native_proteins_summary <- summary(ds_filtered[,target_attributes_proteins])
@@ -458,15 +480,6 @@ http://rmarkdown.rstudio.com/lesson-3.html
 http://rmarkdown.rstudio.com/authoring_rcodechunks.html
 
 
-
-
-mega_iris = data.frame(gg1$all, Species=rep(iris$Species, length=nrow(gg1$all)))
-ggplot(mega_iris, aes_string(x = "x", y = "y")) + 
-  facet_grid(xvar ~ yvar, scales = "free") + 
-  geom_point(aes(colour=Species), na.rm = TRUE, alpha=0.8) + 
-  stat_density(aes(x = x, y = ..scaled.. * diff(range(x)) + min(x)), 
-               data = gg1$densities, position = "identity", 
-               colour = "grey20", geom = "line")
 
 ## R Markdown
 
@@ -639,7 +652,8 @@ scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
 ```
 
 
-
+R Chunk Options https://yihui.name/knitr/options/
+R Density Plot Options http://www.sthda.com/english/wiki/ggplot2-density-plot-quick-start-guide-r-software-and-data-visualization 
 
 
 
