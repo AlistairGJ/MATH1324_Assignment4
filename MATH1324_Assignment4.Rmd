@@ -2,61 +2,23 @@
 title: "MATH1324 Assignment 4"
 author: "Alistair Grevis-James s3644119"
 output:
+  html_document: default
   html_notebook: default
   pdf_document: default
 ---
-
-# References
-
-## Statistical Evaluation of Mice Protein Expression Data Set
-
-UCI Machine Learning Repository
-Center for Machine Learning and Intelligent Systems
-
-#### Abrstract / Executive Summary
-The data file ‘Data_Cortex_Nuclear.xls’ (1) was imported (via Google Drive) into the interactive RStudio environment (2). The libraries pandas, matplotlib and numpy were imported as pd, plt and np respectively. Data was then checked for type, sample rows column names and size (found 1080 by 82). Data cleaning was initially performed by selecting for 11 target protein expression attributes, which had previously been found to have high correlations with learning outcomes. The Boolean categorical labels Treatment, Genotype and Behavior were then replaced with binary Boolean values 0 or 1, and the attribute label Class was generated with the resultant binary Boolean labels to produce 8 unique integer Class labels. A scatter matrix of the uncleaned data was checked to provide direction for analysis, followed by removal of outliers and NaN values. Outliers were identified as falling out a 99th percentile range from any raw protein expression data column. During outlier analysis mouse 3484 was identified as having over 60 outlier values, and was removed from the data set. The outliers and NaN values were then filled with a Class mean. 
-
-
-
-# Dataset
-To explore the differences in the two classification algorithms, we chose to use a dataset freely available from UCI’s machine learning repository (http://archive.ics.uci.edu/ml/). The chosen dataset ‘Mice Protein Expression Data Set’ was generated from experiments by Higuera et al (2015) and Ahmed et al (2014). These projects aimed to understand the impacts of Down Syndrome on learning through analysis of protein expression in mice.
-Down Syndrome (DS) has a prevalence globally of 1 in a 1000 live human births, and is the most common genetically defined cause of intellectual disabilities (Costa 2008, Higuera 2015). DS in humans is caused by the presence of an additional chromosome 21, referred to as trisomy (Costa 2008). Protein expression is significantly perturbed by human trisomy 21, leading to the physical and intellectual manifestations associated with DS. Due to its prevalence and health implications, a strong imperative exists to further understand and treat the condition. Davisson et al., successfully manipulated a mouse genome to produce several models of DS in rodents (Davission, 1933). The Ts65Dn mouse is the best-characterized of the DS models (Mitra, 2012). Higuera et al employed Ts65Dn and normal mice in experimental and control groups, exposing them to a range of variables. The rodents were then euthanized and their cortex protein levels were analysed in a quantitative fashion. The resultant data was subject to an unsupervised clustering method known as Self Organising Maps (SOM) followed by labelling, in order to establish causal relationships between learning outcome, substance exposure, genetic structure and protein expression.
-Some mice have been stimulated to learn (context-shock) and others have not (shock-context) and in order to assess the effect of the drug memantine in recovering the ability to learn in trisomic mice, some mice have been injected with the drug and others have not. The 8 different classes of mice in the dataset are summarised in Figure 1.
-
-
-# Data Importation & Exploration
-
-The data analysis toolkit pandas (McKinney 2010), the scientific computing package numpy, the 2D plotting library matplotlib (Hunter 2007) and the library for opening URLs urllib2 (core python module) were imported into IPython (Perez & Granger 2007) as pd, np, plt and urllib2 respectively. The Excel file ‘Data_Cortex_Nuclear.xls’ was imported from UCI’s machine learning repository (http://archive.ics.uci.edu/ml/) IPython and named “allProtein”.
-
-The class .describe was used to check the data was successfully imported in the previous step. The output was as expected, containing the columns MouseID, Protein Expression (77 columns), Genotype, Treatment, Behavior and class, as described in the literature (Higuera 2015). The .describe class also gave us the size of data [1080 rows × 82 columns], which was consistent with the description of “Mice Protein Expression Data Set” (Higuera 2015). Due to the size of the data set some columns and rows were not displayed, so the class .columns was used to check the attributes had been imported as expected. The class .dtypes was then used to check the data was imported as the correct types. The objects Genotype, Treatment, Behavior and class were checked with .value_counts() to look for missing values, typos and assess if these were Boolean, with the results in table 2.
-
-The output above shows no missing values, no typos and shows Genotype, Treatment and Behavior are Boolean. As noted in table 2, the MouseID takes the form tag_n, where n is the number of measurements made. It was noted that the column class contained a lower-case c, which was replaced with an upper-case C and then checked, as below.
-
-The importation and initial exploration demonstrates we have successfully imported our data, of which there is a vast quantity, 1080 rows by 82 columns, and the data is both numerical and categorical. The next step will be selecting a subset of target proteins (based on observations by Higuera et al) for our analysis. NaN values for protein expression will be checked once the subset is chosen, to avoid unnecessary computation.
-
-
-# Data Cleaning - Selecting the target proteins
-
-Higuera et al observed that of the 77 proteins analysed through self-organizing feature maps, 11 had the greatest correlation with learning outcomes. These were (in no particular order); BRAF_N, pERK_N, S6_N, pGSK3B_N, CaNA_N, CDK5_N, pNUMB_N, DYRK1A_N, ITSN1_N, SOD1_N and GFAP_N. These proteins, along with the tags Genotype, Treatment, Behavior and Class were selected in a new variable, as described below, followed by a brief check of the protein11, showing the size as expected.
-
-As previously mentioned, NaN values for protein expression were to be checked after a subset (protein11) was selected, protein11.describe() was first used to check the numerical data, as seen below. Immediately, we can see the count for BRAF_N, pERK_N, pNUMB_N, DYRK1A_N, ITSN1_N and SOD1_N to be 1077, rather than 1080. 
-
-The following code was used to confirm the NaN values (through one instance, BRAF_N).  
-
-
-The native data contains both numerical (the protein expression levels) and categorical data (Genotype, Behavior, Treatment and Class). 
-
-
-
-Plots for protein expression
-https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-with-scale-x-date-axis-in-r
-
+<style>
+body {
+text-align: justify}
+</style>
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r defining markup language for qwraps2, echo = FALSE}
+options(qwraps2_markup = "markdown")
+```
 
-```{r, eval=FALSE}
+```{r importing the libraries, echo=FALSE}
 library(rmarkdown)
 library(GGally)
 library(car)
@@ -70,94 +32,118 @@ library(granova)
 library(psychometric)
 library(Hmisc)
 library(qwraps2)
+```
+
+# Statistical Evaluation of Mice Protein Expression Data Set
+
+### Executive Summary
+
+
+### Hypothesis
+
+
+### Introduction
+The chosen dataset ‘Mice Protein Expression Data Set’ was generated from experiments by Higuera et al (2015) and Ahmed et al (2014). These projects aimed to understand the impacts of Down Syndrome on learning through analysis of protein expression in mice. Down Syndrome (DS) has a prevalence globally of 1 in a 1000 live human births, and is the most common genetically defined cause of intellectual disabilities (Costa 2008, Higuera 2015). DS in humans is caused by the presence of an additional chromosome 21, referred to as trisomy (Costa 2008). Protein expression is significantly perturbed by human trisomy 21, leading to the physical and intellectual manifestations associated with DS. Due to its prevalence and health implications, a strong imperative exists to further understand and treat the condition. Davisson et al., successfully manipulated a mouse genome to produce several models of DS in rodents (Davission, 1933). The Ts65Dn mouse is the best-characterized of the DS models (Mitra, 2012). Higuera et al employed Ts65Dn and normal mice in experimental and control groups, exposing them to a range of variables. The rodents were then euthanized and their cortex protein levels were analysed in a quantitative fashion.  
+
+Some mice have been stimulated to learn (context-shock) and others have not (shock-context) and in order to assess the effect of the drug memantine in recovering the ability to learn in trisomic mice, some mice have been injected with the drug and others have not. The 8 different classes of mice in the dataset are summarised in Figure 1.  
+<br>
+<center>
+![](http://journals.plos.org/plosone/article/figure/image?size=medium&id=10.1371/journal.pone.0129126.g001)
+</center>  
+<br>
+_Fig 1. Classes of mice. (A) There are eight classes of mice based on genotype (control, c, and trisomy, t), stimulation to learn (Context-Shock, CS, and Shock-Context, SC) and treatment (saline, s, and memantine, m). Learning outcome indicates the response to learning for each class. (B) Number of mice in each class. (C) Format of protein expression data: rows are individual mice, and columns, P 1 … P77, are the measured levels of the 77 proteins. The color coding in the last column identifies each class; color coding was used in visualization of the SOMs but not in clustering._
+
+### RStudio Libraries (CHECK)  
+The libraries `rmarkdown`, `GGally`, `car`, `ggplot2`, `dplyr`, `gsheet`, `gridExtra`,`htmltools`, `reshape2`, `granova`, `psychometric`, `Hmisc` & `qwraps` were employed during the analysis.  
+
+### Data Set  
+The Excel file ‘Data_Cortex_Nuclear.xls’ was imported from UCI’s machine learning repository (http://archive.ics.uci.edu/ml/) (REF) into the RStudio interactive environment (REF) as “ds”. The data file ‘Data_Cortex_Nuclear.xls’ (1) was imported (via Google Drive) into the interactive RStudio environment (2).
+
+```{r importing the dataset, tidy=TRUE, echo=TRUE}
 url <- 'https://docs.google.com/spreadsheets/d/158zPd4XCYoaXNzHA2OJPkOmzSWYjwFoEuOiMzV1O-rU/edit?usp=sharing'
 ds <- gsheet2tbl(url)
 ```
 
-```{r defining markup language for qwraps2, echo = TRUE}
-options(qwraps2_markup = "markdown")
-```
+* in order to establish causal relationships between learning outcome, substance exposure, genetic structure and protein expression.
+<br>
 
-### Describe the data set
+### Data Checking
+The initial data checking is summarized in the table below.
 
-```{r IMAGES, echo = TRUE}
-#![](http://example.com/logo.png)
-#![optional caption text](figures/img.png)
-```
+ Function | Purpose / Outcome
+------------- | -------------------------------------------------
+`summary(ds)` | Confirming the successful importation of the data set. Size was 1080 observations over 82 variables. The 77 protein attributes are continuous numerical data, with NaN values present.
+`colnames(ds)` | Confirming the column names present in the dataset. The first column is MouseID (12 - 15 observations per mouse, per protein). The final four columns contain the categorical data about each mouse.
+`MouseID <- ds$MouseID` | Each mouseID is appended with the suffix '_n' (where 1 <- n <- 15). For example MouseID '309' is recorded as 309_1, 309_2, ... 309_15.
 
+### Data Preprocessing
+The native data set will be preprocessed as follows for use in our analysis.
 
+#### Stripping the measurement count from each mouse
 
-### Data Exploration Cleaning
-These data 
-* Checked by summary (missing values noted)
-* Checked column names (all good)
-* Checked mouseID, all contain _n
-* Striped _n
-* Checked stripped ds
-In the native data set each mouse had measurements 
-
-```{r cleaning the data - Stripping MouseID_n, echo = TRUE}
+During data collection, per each individual mouse, per each protein, 12 - 15 expression measurements were taken _in vitro_. As mentioned in the table above, these were denoted as '_n' where 1 <- n <- 15. For the purpose of this investigation, the _n notation is not required, and will be stripped from the data. 
+```{r cleaning the data - Stripping MouseID_n, echo=TRUE, tidy=TRUE}
 MouseID <- gsub("\\_.*", "", ds$MouseID)
 ds$MouseID <- MouseID
 ```
+The function `table(head(ds$MouseID, 150))` samples the first 10 mice in the data set, showing successful removal of _n notation.
+```{r checking the data - ds$MouseID cleaned (first 10 mice), echo=TRUE, tidy=TRUE}
+table(head(ds$MouseID, 150))
+```
+<br>
 
-* List of desired from literature 
-```{r, echo = TRUE}
-target_attributes_all <- c("MouseID", "ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N",
-                           "pNUMB_N", "S6_N", "SOD1_N", "Genotype","Treatment","Behavior","class")
+#### Selecting the target proteins (talk about size of data set?)
+
+Through the use of self-organizing feature maps, Higuera et al were able to determine the most discriminant proteins in comparison of the control mice classes (REF) and the trisomic mice classes (REF). [Include 'in other words?' / In the context of these learning experiments...]. From these data, 8 target proteins were selected for use in this analysis (ADD TABULATED TABLE TO APPENDIX). These were (in no particular order); ARC_N, BRAF_N, DYRK1A_N, ITSN1_N, pERK_N, pNUMB_N, S6_N & SOD1_N. A vector of these identifiers was created as `target_attributes_proteins` _These 8 target proteins have were expressed significantly less or more... with learning outcomes_
+```{r vector of target proteins for statistical analysis, echo=TRUE, tidy=TRUE}
 target_attributes_proteins <- c("ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N",
                            "pNUMB_N", "S6_N", "SOD1_N")
 ```
-### Make list of desired
-```{r, echo = TRUE}
+These target proteins, along with the categorical tags Genotype, Treatment, Behavior and class were added to another vector, `target_attributes_all`.
+```{r vector of all target attributes for statistical analysis, echo=TRUE, tidy=TRUE}
+target_attributes_all <- c("MouseID","ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N",
+                           "pNUMB_N", "S6_N", "SOD1_N", "Genotype","Treatment","Behavior","class")
+```
+A new data set was then created, with the native data set observations for only the variables named in the `target_attributes_all` vector.
+
+```{r creating ds_filtered, echo=TRUE, tidy=TRUE}
 ds_filtered <- ds[,target_attributes_all]
 ```
-### Visualization MUST CLEAN FIRST
-```{r, echo = TRUE}
-ggpairs(ds_filtered[,target_attributes_proteins])
+
+### Checking the new data set
+The categorical values in `ds_filtered` were checked with `unique(ds_filtered[,10:13])`, not typographical errors were present, as below.
+```{r filtering the categorical values, echo=TRUE, tidy=TRUE}
+categorical_counts <- ds_filtered[,10:13]
+unique(categorical_counts)
 ```
 
+The categorical variable counts are summarized in the table below (with corressponding functions in column one).
+
+ Function | Counts | Total
+----- | ----------------------------------------- | ----------
+`table(ds_filtered$Genotype)`  | Control = 570,  Ts65Dn = 510            | 1080
+`table(ds_filtered$Treatment)` | Memantine = 570,   Saline =  510         | 1080
+`table(ds_filtered$Behavior)`  | C/S = 525, S/C = 555                      | 1080
+`table(ds_filtered$class)`     | c-CS-m = 150,  c-CS-s = 135,  c-SC-m = 150,  c-SC-s = 135,   t-CS-m = 135, t-CS-s = 105, t-SC-m = 135, t-SC-s = 135  | 1080
+
+#### NaN Values - FIND and FILL (discuss this)
+As previously mentioned, the `summary(ds)` function showed NaN values present (transposed for readability).
+```{r locating NaN, echo=TRUE, tidy=TRUE}
+t(which(is.na(ds_filtered), arr.ind=TRUE))
+```
+The expression `ds_filtered[c(988, 989, 990),c(1, 10, 11, 12, 13)]` was used to identify the mouse and correspoding categories.
+```{r show rows, echo=FALSE}
+ds_filtered[c(988, 989, 990),c(1, 10, 11, 12, 13)]
+```
 Justification - "Because their is such a mix of mice (8 groups) filter for outliers based mean of each group"
 Step 1 - Fill NaN (with group mean)
 Step 2 - Remove outliers (group mean)
 
+MENTION IN INTRO HOW CLASS IS AN AMALGAMATION OF G, T, B.
+
 a. Need to find mean of each group
-* We need a count here
 
-```{r, echo=TRUE}
-categorical_counts <- ds_filtered[,10:13]
-unique(categorical_counts)
-```
-```{r, echo=TRUE}
-table(ds_filtered$Genotype)
-```
-```{r, echo=TRUE}
-table(ds_filtered$Treatment)
-```
-```{r, echo=TRUE}
-table(ds_filtered$Behavior)
-```
-
-```{r, echo=TRUE}
-table(ds_filtered$class)
-```
-
-Discuss
-
-Now located the NaN - summarise this with text found to be [], [], [], [], []
-
-```{r locating NaN, echo=FALSE}
-which(is.na(ds_filtered), arr.ind=TRUE)
-```
-
-```{r show rows, echo=FALSE}
-NAN_row_mask <- c(988, 989, 990)
-NAN_column_mask <- c(3, 4, 5, 6, 7, 9)
-#want to see mouse, and categories
-ds_filtered[c(988, 989, 990),c(1, 10, 11, 12, 13)]
-```
-
-# Will fill with Class mean
+#### Will fill with Class mean
 * filling with genotype, treatment or behavior would be make little sense
 * Only choice left to fill with mouseID from or class
 * Will go with class
@@ -170,15 +156,47 @@ NaN_3426_tSCs <- ds_filtered[tSCs_filter, NaN_column_mask]
 summary_3426_tSCs <- summary(NaN_3426_tSCs)
 summary_3426_tSCs
 ```
-
-* Mean summary tricky - just fill 
-
-### Fill with mean...
-
-```{r, echo=FALSE}
+The filtered mouse data was exported using as `write.csv(ds_filtered, file = "mouse_data_filtered.csv")`. And then imported back in.
+```{r, echo=TRUE, tidy=TRUE}
 write.csv(ds_filtered, file = "mouse_data_filtered.csv")
 ds_filled_NaN <- gsheet2tbl('https://docs.google.com/spreadsheets/d/1FKFINItxyosgFhwiihpT3MSuMTxR-LaYPNG_XNctwlU/edit?usp=sharing')
 ```
+
+
+
+
+
+
+_____________________________
+
+Data was then checked for type, sample rows column names and size (found 1080 by 82). Data cleaning was initially performed by selecting for 11 target protein expression attributes, which had previously been found to have high correlations with learning outcomes. The Boolean categorical labels Treatment, Genotype and Behavior were then replaced with binary Boolean values 0 or 1, and the attribute label Class was generated with the resultant binary Boolean labels to produce 8 unique integer Class labels. A scatter matrix of the uncleaned data was checked to provide direction for analysis, followed by removal of outliers and NaN values. Outliers were identified as falling out a 99th percentile range from any raw protein expression data column. During outlier analysis mouse 3484 was identified as having over 60 outlier values, and was removed from the data set. The outliers and NaN values were then filled with a Class mean. 
+
+# Data Importation & Exploration
+
+The class .describe was used to check the data was successfully imported in the previous step. The output was as expected, containing the columns MouseID, Protein Expression (77 columns), Genotype, Treatment, Behavior and class, as described in the literature (Higuera 2015). The .describe class also gave us the size of data [1080 rows × 82 columns], which was consistent with the description of “Mice Protein Expression Data Set” (Higuera 2015). Due to the size of the data set some columns and rows were not displayed, so the class .columns was used to check the attributes had been imported as expected. The class .dtypes was then used to check the data was imported as the correct types. The objects Genotype, Treatment, Behavior and class were checked with .value_counts() to look for missing values, typos and assess if these were Boolean, with the results in table 2.
+
+The output above shows no missing values, no typos and shows Genotype, Treatment and Behavior are Boolean. As noted in table 2, the MouseID takes the form tag_n, where n is the number of measurements made. It was noted that the column class contained a lower-case c, which was replaced with an upper-case C and then checked, as below.
+
+The importation and initial exploration demonstrates we have successfully imported our data, of which there is a vast quantity, 1080 rows by 82 columns, and the data is both numerical and categorical. The next step will be selecting a subset of target proteins (based on observations by Higuera et al) for our analysis. NaN values for protein expression will be checked once the subset is chosen, to avoid unnecessary computation.
+
+As previously mentioned, NaN values for protein expression were to be checked after a subset (protein11) was selected, protein11.describe() was first used to check the numerical data, as seen below. Immediately, we can see the count for BRAF_N, pERK_N, pNUMB_N, DYRK1A_N, ITSN1_N and SOD1_N to be 1077, rather than 1080. 
+
+
+
+
+The native data contains both numerical (the protein expression levels) and categorical data (Genotype, Behavior, Treatment and Class). 
+
+
+
+Plots for protein expression
+https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-with-scale-x-date-axis-in-r
+
+
+
+
+
+
+
 
 * More succinct code?
 ```{r 3426 filter, echo=FALSE}
@@ -288,19 +306,15 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 
 ### Visualization MUST CLEAN FIRST
 ```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
-scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
-        columns = target_attributes_proteins, # columns to plot, default to all.
-        #title = "", # title of the plot
-        mapping = aes(colour = class), # aesthetics, ggplot2 style
+scatter_matrix <- ggpairs(data = ds_filled_NaN,
+        columns = target_attributes_proteins, 
+        mapping = aes(colour = class), 
         upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
         lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
         combo = wrap("dot", alpha = 0.6, size = 0.2)))
 
 scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
                        axis.text = element_text(size = rel(0.5)),
-                       #axis.text.x = element_text(margin = margin(t = 0.2), vjust = 0.5), 
-                       #axis.text.y = element_text(margin = margin(r = 0.2), hjust = 0.5),
-                       #axis.title.x = element_text(size = 0.5, angle = 90),
                        strip.text = element_text(face = "bold", size=7),
                        strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
                        strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
@@ -401,10 +415,9 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 
 ### Visualization MUST CLEAN FIRST
 ```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
-scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
-        columns = target_attributes_proteins, # columns to plot, default to all.
-        #title = "", # title of the plot
-        mapping = aes(colour = class), # aesthetics, ggplot2 style
+scatter_matrix <- ggpairs(data = ds_filled_NaN,
+        columns = target_attributes_proteins,
+        mapping = aes(colour = class),
         upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
         lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
         combo = wrap("dot", alpha = 0.6, size = 0.2)))
@@ -481,16 +494,6 @@ http://rmarkdown.rstudio.com/authoring_rcodechunks.html
 
 
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
 ## Including Plots
 
 You can also embed plots, for example:
@@ -533,106 +536,24 @@ expression_attributes <- c("BRAF_N","pERK_N","S6_N","pGSK3B_N","CaNA_N",
                  "CDK5_N","pNUMB_N","DYRK1A_N","ITSN1_N","SOD1_N","GFAP_N")
 ```
 
-
-
-```{r cchecking the data - ds$MouseID cleaned, echo = TRUE}
-library(ggplot2)
-ggpairs(with(ds, data.frame(MouseID, ITSN1_N)))
+KEEP
+```{r, echo=TRUE}
+table(ds_filtered$Genotype)
 ```
 
-
-
-```{r REPLACE couldnt make work, echo=FALSE}
-#df <- data.frame(ds_filtered[c(988, 989, 990), "BRAF_N"] == 0.2867, 
-ds_filtered <- ds_filtered[c(988, 989, 990),"BRAF_N"] == 0.2867
-dataset <- matrix(sample(c(NA, 1:5), 25, replace = TRUE), 5);
-data <- as.data.frame(dataset)
+```{r, echo=TRUE}
+table(ds_filtered$Treatment)
 ```
 
+```{r, echo=TRUE}
+table(ds_filtered$Behavior)
+```
 
+```{r, echo=TRUE}
+table(ds_filtered$class)
+```
 
-our_summary <- 
-  with(categorical_counts, 
-       list("Genotype" = table(categorical_counts[,1]),
-            "Treatment" = table(ds_filtered$Treatment),
-            "Behavior" = table(ds_filtered$Behavior),
-            "class" = table(ds_filtered$class)
-            ))
-our_summary
-
-
-
-theme_gray
-function (base_size = 11, base_family = "") 
-{
- half_line <- base_size/2
-theme(
-  line = element_line(colour = "black", size = 0.5, 
-                      linetype = 1, lineend = "butt"), 
-  rect = element_rect(fill = "white", colour = "black",
-                      size = 0.5, linetype = 1),
-  text = element_text(family = base_family, face = "plain",
-                      colour = "black", size = base_size,
-                      lineheight = 0.9,  hjust = 0.5,
-                      vjust = 0.5, angle = 0, 
-                      margin = margin(), debug = FALSE), 
-  
-  axis.line = element_blank(), 
-  axis.text = element_text(size = rel(0.8), colour = "grey30"),
-  axis.text.x = element_text(margin = margin(t = 0.8*half_line/2), 
-                             vjust = 1), 
-  axis.text.y = element_text(margin = margin(r = 0.8*half_line/2),
-                             hjust = 1),
-  axis.ticks = element_line(colour = "grey20"), 
-  axis.ticks.length = unit(half_line/2, "pt"), 
-  axis.title.x = element_text(margin = margin(t = 0.8 * half_line,
-                                          b = 0.8 * half_line/2)),
-  axis.title.y = element_text(angle = 90, 
-                              margin = margin(r = 0.8 * half_line,
-                                          l = 0.8 * half_line/2)),
-  
-  legend.background = element_rect(colour = NA), 
-  legend.margin = unit(0.2, "cm"), 
-  legend.key = element_rect(fill = "grey95", colour = "white"),
-  legend.key.size = unit(1.2, "lines"), 
-  legend.key.height = NULL,
-  legend.key.width = NULL, 
-  legend.text = element_text(size = rel(0.8)),
-  legend.text.align = NULL,
-  legend.title = element_text(hjust = 0), 
-  legend.title.align = NULL, 
-  legend.position = "right", 
-  legend.direction = NULL,
-  legend.justification = "center", 
-  legend.box = NULL, 
-  
-  panel.background = element_rect(fill = "grey92", colour = NA),
-  panel.border = element_blank(), 
-  panel.grid.major = element_line(colour = "white"), 
-  panel.grid.minor = element_line(colour = "white", size = 0.25), 
-  panel.margin = unit(half_line, "pt"), panel.margin.x = NULL, 
-  panel.margin.y = NULL, panel.ontop = FALSE, 
-  
-  strip.background = element_rect(fill = "grey85", colour = NA),
-  strip.text = element_text(colour = "grey10", size = rel(0.8)),
-  strip.text.x = element_text(margin = margin(t = half_line,
-                                              b = half_line)), 
-  strip.text.y = element_text(angle = -90, 
-                              margin = margin(l = half_line, 
-                                              r = half_line)),
-  strip.switch.pad.grid = unit(0.1, "cm"),
-  strip.switch.pad.wrap = unit(0.1, "cm"), 
-  
-  plot.background = element_rect(colour = "white"), 
-  plot.title = element_text(size = rel(1.2), 
-                            margin = margin(b = half_line * 1.2)),
-  plot.margin = margin(half_line, half_line, half_line, half_line),
-  complete = TRUE)
-}
-
-+ theme_linedraw()
-
-axis.text = element_text(size = rel(0.6), colour = "grey30")
+# References
 
 
 ```{r, echo = TRUE}
@@ -655,6 +576,7 @@ scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
 R Chunk Options https://yihui.name/knitr/options/
 R Density Plot Options http://www.sthda.com/english/wiki/ggplot2-density-plot-quick-start-guide-r-software-and-data-visualization 
 
-
+CONTROL MICE PROTEINS http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s003
+TRISOMIC MICE PROTEINS http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s004 
 
 
