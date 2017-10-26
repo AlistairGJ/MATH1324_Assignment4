@@ -32,6 +32,7 @@ library(granova)
 library(psychometric)
 library(Hmisc)
 library(qwraps2)
+library(outliers)
 ```
 
 # Statistical Evaluation of Mice Protein Expression Data Set
@@ -40,7 +41,7 @@ library(qwraps2)
 
 
 ### Hypothesis
-
+Comment on not needed to be normalized in preprocessing
 
 ### Introduction
 The chosen dataset ‘Mice Protein Expression Data Set’ was generated from experiments by Higuera et al (2015) and Ahmed et al (2014). These projects aimed to understand the impacts of Down Syndrome on learning through analysis of protein expression in mice. Down Syndrome (DS) has a prevalence globally of 1 in a 1000 live human births, and is the most common genetically defined cause of intellectual disabilities (Costa 2008, Higuera 2015). DS in humans is caused by the presence of an additional chromosome 21, referred to as trisomy (Costa 2008). Protein expression is significantly perturbed by human trisomy 21, leading to the physical and intellectual manifestations associated with DS. Due to its prevalence and health implications, a strong imperative exists to further understand and treat the condition. Davisson et al., successfully manipulated a mouse genome to produce several models of DS in rodents (Davission, 1933). The Ts65Dn mouse is the best-characterized of the DS models (Mitra, 2012). Higuera et al employed Ts65Dn and normal mice in experimental and control groups, exposing them to a range of variables. The rodents were then euthanized and their cortex protein levels were analysed in a quantitative fashion.  
@@ -54,7 +55,7 @@ Some mice have been stimulated to learn (context-shock) and others have not (sho
 _Fig 1. Classes of mice. (A) There are eight classes of mice based on genotype (control, c, and trisomy, t), stimulation to learn (Context-Shock, CS, and Shock-Context, SC) and treatment (saline, s, and memantine, m). Learning outcome indicates the response to learning for each class. (B) Number of mice in each class. (C) Format of protein expression data: rows are individual mice, and columns, P 1 … P77, are the measured levels of the 77 proteins. The color coding in the last column identifies each class; color coding was used in visualization of the SOMs but not in clustering._
 
 ### RStudio Libraries (CHECK)  
-The libraries `rmarkdown`, `GGally`, `car`, `ggplot2`, `dplyr`, `gsheet`, `gridExtra`,`htmltools`, `reshape2`, `granova`, `psychometric`, `Hmisc` & `qwraps` were employed during the analysis.  
+The libraries `rmarkdown`, `GGally`, `car`, `ggplot2`, `dplyr`, `gsheet`, `gridExtra`,`htmltools`, `reshape2`, `granova`, `psychometric`, `Hmisc` & `qwraps` were employed during the analysis.  PLUS OUTLIERS!
 
 ### Data Set  
 The Excel file ‘Data_Cortex_Nuclear.xls’ was imported from UCI’s machine learning repository (http://archive.ics.uci.edu/ml/) (REF) into the RStudio interactive environment (REF) as “ds”. The data file ‘Data_Cortex_Nuclear.xls’ (1) was imported (via Google Drive) into the interactive RStudio environment (2).
@@ -162,10 +163,99 @@ write.csv(ds_filtered, file = "mouse_data_filtered.csv")
 ds_filled_NaN <- gsheet2tbl('https://docs.google.com/spreadsheets/d/1FKFINItxyosgFhwiihpT3MSuMTxR-LaYPNG_XNctwlU/edit?usp=sharing')
 ```
 
+```{r checking NaN in ds_filled, echo=TRUE, tidy=TRUE}
+t(which(is.na(ds_filled_NaN), arr.ind=TRUE))
+```
 
+### Visualization 
+* Describe methodology / why (again, CLASS, amalgamation of all categories)
+* Why is scatter matrix a suitable first choice?
+```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN,
+        columns = target_attributes_proteins, 
+        mapping = aes(colour = class), 
+        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
+        combo = wrap("dot", alpha = 0.6, size = 0.2)))
+scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       strip.text = element_text(face = "bold", size=7),
+                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
+                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
+```
 
+* ID orange points as potential outlier
+outlier gives most extreme from mean.
+* Another summary table "Finding the outlier"
 
+### Check with bar - pERK & BRAF
 
+```{r, echo=FALSE}
+BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "BRAF_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+
+```{r, echo=FALSE}
+pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, fill = ds_filled_NaN$class)) + 
+  geom_boxplot() + 
+  theme(legend.title=element_blank()) + 
+  labs(title = NULL,  x = "pERK_N Expression", y = NULL) + 
+  guides(fill = FALSE) + 
+  coord_flip()
+```
+
+```{r, echo=FALSE}
+grid.arrange(BRAF_N_Hist, pERK_N_Hist, nrow = 2)
+```
+
+#Find the most extreme outliers
+
+```{r, echo=TRUE, tidy=TRUE}
+ARC_N_outlier <- outlier(ds_filled_NaN$ARC_N)
+BRAF_N_outlier <- outlier(ds_filled_NaN$BRAF_N)
+DYRK1A_N_outlier <- outlier(ds_filled_NaN$DYRK1A_N)
+ITSN1_N_outlier <- outlier(ds_filled_NaN$ITSN1_N)
+pERK_N_outlier <- outlier(ds_filled_NaN$pERK_N)
+pNUMB_N_outlier <- outlier(ds_filled_NaN$pNUMB_N)
+S6_N_outlier <- outlier(ds_filled_NaN$S6_N)
+SOD1_N_outlier <- outlier(ds_filled_NaN$SOD1_N)
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+tSCs_filter <- ds_filtered$class == "t-SC-s"
+NaN_column_mask <- c(3, 4, 5, 6, 7, 9)
+NaN_3426_tSCs <- ds_filtered[tSCs_filter, NaN_column_mask]
+summary_3426_tSCs <- summary(NaN_3426_tSCs)
+summary_3426_tSCs
+```
+
+## MOUSE 3484 = OUTLIER REMOVAL BELOW
+```{r, echo = TRUE}
+ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
+```
+* Comment on size
+
+Check scatter (qualitative at this stage)
+
+```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN,
+        columns = target_attributes_proteins,
+        mapping = aes(colour = class),
+        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
+        combo = wrap("dot", alpha = 0.6, size = 0.2)))
+scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       strip.text = element_text(face = "bold", size=7),
+                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
+                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
+```
 
 _____________________________
 
@@ -194,20 +284,6 @@ https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-wi
 
 
 
-
-
-
-
-* More succinct code?
-```{r 3426 filter, echo=FALSE}
-NaN_check <- ds_filled_NaN[tSCs_filter, NaN_column_mask]
-summary_NaN_check <- summary(NaN_check)
-summary_NaN_check
-```
-
-```{r locating NaN SUCCINCT, echo=FALSE}
-which(is.na(ds_filled_NaN), arr.ind=TRUE)
-```
 
 ### Begin box plots (detect and deal with outliers)
 ### All 8 classes per 9 target proteins OR ...?
@@ -322,10 +398,6 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
 
-## MOUSE 3484 = OUTLIER REMOVAL BELOW
-```{r, echo = TRUE}
-ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
-```
 
 
 ```{r, echo=FALSE}
@@ -414,20 +486,7 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 ```
 
 ### Visualization MUST CLEAN FIRST
-```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
-scatter_matrix <- ggpairs(data = ds_filled_NaN,
-        columns = target_attributes_proteins,
-        mapping = aes(colour = class),
-        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
-        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
-        combo = wrap("dot", alpha = 0.6, size = 0.2)))
-scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
-                       axis.text = element_text(size = rel(0.5)),
-                       strip.text = element_text(face = "bold", size=7),
-                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
-                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
-scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
-```
+
 
 SCATTER PLOTS
 - Based on CLASS
