@@ -241,8 +241,8 @@ ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
 * Comment on size
 
 Check scatter (qualitative at this stage)
-
-```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
+Plotted using same code as above
+```{r echo = FALSE, message = FALSE, results = 'hide', tidy = TRUE}
 scatter_matrix <- ggpairs(data = ds_filled_NaN,
         columns = target_attributes_proteins,
         mapping = aes(colour = class),
@@ -257,41 +257,7 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
 
-_____________________________
-
-Data was then checked for type, sample rows column names and size (found 1080 by 82). Data cleaning was initially performed by selecting for 11 target protein expression attributes, which had previously been found to have high correlations with learning outcomes. The Boolean categorical labels Treatment, Genotype and Behavior were then replaced with binary Boolean values 0 or 1, and the attribute label Class was generated with the resultant binary Boolean labels to produce 8 unique integer Class labels. A scatter matrix of the uncleaned data was checked to provide direction for analysis, followed by removal of outliers and NaN values. Outliers were identified as falling out a 99th percentile range from any raw protein expression data column. During outlier analysis mouse 3484 was identified as having over 60 outlier values, and was removed from the data set. The outliers and NaN values were then filled with a Class mean. 
-
-# Data Importation & Exploration
-
-The class .describe was used to check the data was successfully imported in the previous step. The output was as expected, containing the columns MouseID, Protein Expression (77 columns), Genotype, Treatment, Behavior and class, as described in the literature (Higuera 2015). The .describe class also gave us the size of data [1080 rows × 82 columns], which was consistent with the description of “Mice Protein Expression Data Set” (Higuera 2015). Due to the size of the data set some columns and rows were not displayed, so the class .columns was used to check the attributes had been imported as expected. The class .dtypes was then used to check the data was imported as the correct types. The objects Genotype, Treatment, Behavior and class were checked with .value_counts() to look for missing values, typos and assess if these were Boolean, with the results in table 2.
-
-The output above shows no missing values, no typos and shows Genotype, Treatment and Behavior are Boolean. As noted in table 2, the MouseID takes the form tag_n, where n is the number of measurements made. It was noted that the column class contained a lower-case c, which was replaced with an upper-case C and then checked, as below.
-
-The importation and initial exploration demonstrates we have successfully imported our data, of which there is a vast quantity, 1080 rows by 82 columns, and the data is both numerical and categorical. The next step will be selecting a subset of target proteins (based on observations by Higuera et al) for our analysis. NaN values for protein expression will be checked once the subset is chosen, to avoid unnecessary computation.
-
-As previously mentioned, NaN values for protein expression were to be checked after a subset (protein11) was selected, protein11.describe() was first used to check the numerical data, as seen below. Immediately, we can see the count for BRAF_N, pERK_N, pNUMB_N, DYRK1A_N, ITSN1_N and SOD1_N to be 1077, rather than 1080. 
-
-
-
-
-The native data contains both numerical (the protein expression levels) and categorical data (Genotype, Behavior, Treatment and Class). 
-
-
-
-Plots for protein expression
-https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-with-scale-x-date-axis-in-r
-
-
-
-
-
-### Begin box plots (detect and deal with outliers)
-### All 8 classes per 9 target proteins OR ...?
-
-```{r, echo=FALSE}
-native_proteins_summary <- summary(ds_filtered[,target_attributes_proteins])
-summary_table(ds_filtered)
-```
+### Box Plots
 
 * Give one dem code then do all plots (add visible code to appendix also)
 ```{r, echo=FALSE}
@@ -380,113 +346,12 @@ grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 
 * Discuss hist and also talk about number of point (sample, population, QQ plots ...)
 
-### Visualization MUST CLEAN FIRST
-```{r echo = TRUE, message = FALSE, results = 'hide', tidy = TRUE}
-scatter_matrix <- ggpairs(data = ds_filled_NaN,
-        columns = target_attributes_proteins, 
-        mapping = aes(colour = class), 
-        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
-        lower = list(continuous = wrap("points", alpha = 0.4, size = 0.1), 
-        combo = wrap("dot", alpha = 0.6, size = 0.2)))
+##### Begin box plots (detect and deal with outliers)
+##### All 8 classes per 9 target proteins OR ...?
 
-scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
-                       axis.text = element_text(size = rel(0.5)),
-                       strip.text = element_text(face = "bold", size=7),
-                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
-                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+_________________________
 
-scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
-```
-
-
-
-```{r, echo=FALSE}
-ARC_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ARC_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "ARC_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-```{r, echo=FALSE}
-BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "BRAF_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-
-```{r, echo=FALSE}
-grid.arrange(ARC_N_Hist, BRAF_N_Hist, nrow = 2)
-```
-
-
-```{r, echo=FALSE}
-DYRK1A_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=DYRK1A_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "DYRK1A_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-```{r, echo=FALSE}
-ITSN1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ITSN1_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "ITSN1_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-
-```{r, echo=FALSE}
-grid.arrange(DYRK1A_N_Hist, ITSN1_N_Hist, nrow = 2)
-```
-
-```{r, echo=FALSE}
-pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "pERK_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-```{r, echo=FALSE}
-pNUMB_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pNUMB_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "pNUMB_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-
-```{r, echo=FALSE}
-grid.arrange(pERK_N_Hist, pNUMB_N_Hist, nrow = 2)
-```
-
-```{r, echo=FALSE}
-S6_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=S6_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "S6_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-```{r, echo=FALSE}
-SOD1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=SOD1_N, fill = ds_filled_NaN$class)) + 
-  geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
-  labs(title = NULL,  x = "SOD1_N Expression", y = NULL) + 
-  guides(fill = FALSE) + 
-  coord_flip()
-```
-
-```{r, echo=FALSE}
-grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
-```
-
-### Visualization MUST CLEAN FIRST
-
+### STATS - Linear Relationships
 
 SCATTER PLOTS
 - Based on CLASS
@@ -495,6 +360,10 @@ SCATTER PLOTS
 * pERK_N vs ITSN1_N
 - Enlarged Scatter w/ tansparent hist
 - The value is that it is applicable accross all class, genotypes e.t.c, so these proteins aren't amenable to changes in profile accross the experimental conditions described / explored.
+
+_________________________
+
+### STATS - t-tests (dependent & independent)
 
 BAR CHARTS
 - Based on CLASS
@@ -511,12 +380,6 @@ for one target protein
 
 SHOULD I COMBINE BAR INTO MATRIX? Can't seem to do this.
 
-```{r, echo=FALSE}
-native_proteins_summary <- summary(ds_filtered[,target_attributes_proteins])
-summary_table(ds_filtered)
-```
-
-
 ### Once outliers are removed, choose target protein and to t-tests 
 
 start with DESCRIPTIVE STATS
@@ -527,6 +390,33 @@ two mice from same treatment
 two mice from same genotype
 two mice from same behavior
 for one target protein
+
+_____________________________
+
+Data was then checked for type, sample rows column names and size (found 1080 by 82). Data cleaning was initially performed by selecting for 11 target protein expression attributes, which had previously been found to have high correlations with learning outcomes. The Boolean categorical labels Treatment, Genotype and Behavior were then replaced with binary Boolean values 0 or 1, and the attribute label Class was generated with the resultant binary Boolean labels to produce 8 unique integer Class labels. A scatter matrix of the uncleaned data was checked to provide direction for analysis, followed by removal of outliers and NaN values. Outliers were identified as falling out a 99th percentile range from any raw protein expression data column. During outlier analysis mouse 3484 was identified as having over 60 outlier values, and was removed from the data set. The outliers and NaN values were then filled with a Class mean. 
+
+# Data Importation & Exploration
+
+The class .describe was used to check the data was successfully imported in the previous step. The output was as expected, containing the columns MouseID, Protein Expression (77 columns), Genotype, Treatment, Behavior and class, as described in the literature (Higuera 2015). The .describe class also gave us the size of data [1080 rows × 82 columns], which was consistent with the description of “Mice Protein Expression Data Set” (Higuera 2015). Due to the size of the data set some columns and rows were not displayed, so the class .columns was used to check the attributes had been imported as expected. The class .dtypes was then used to check the data was imported as the correct types. The objects Genotype, Treatment, Behavior and class were checked with .value_counts() to look for missing values, typos and assess if these were Boolean, with the results in table 2.
+
+The output above shows no missing values, no typos and shows Genotype, Treatment and Behavior are Boolean. As noted in table 2, the MouseID takes the form tag_n, where n is the number of measurements made. It was noted that the column class contained a lower-case c, which was replaced with an upper-case C and then checked, as below.
+
+The importation and initial exploration demonstrates we have successfully imported our data, of which there is a vast quantity, 1080 rows by 82 columns, and the data is both numerical and categorical. The next step will be selecting a subset of target proteins (based on observations by Higuera et al) for our analysis. NaN values for protein expression will be checked once the subset is chosen, to avoid unnecessary computation.
+
+As previously mentioned, NaN values for protein expression were to be checked after a subset (protein11) was selected, protein11.describe() was first used to check the numerical data, as seen below. Immediately, we can see the count for BRAF_N, pERK_N, pNUMB_N, DYRK1A_N, ITSN1_N and SOD1_N to be 1077, rather than 1080. 
+
+The native data contains both numerical (the protein expression levels) and categorical data (Genotype, Behavior, Treatment and Class). 
+
+
+
+Plots for protein expression
+https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-with-scale-x-date-axis-in-r
+
+
+
+
+
+
 
 dietGymFood_data_d %>%
   summarise(
