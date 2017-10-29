@@ -212,7 +212,7 @@ The resultant plots show these outliers to be very significantly far from the me
 ```{r, echo=TRUE, tidy=TRUE}
 BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "BRAF_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
@@ -221,17 +221,17 @@ BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, f
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "pERK_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
 ```
 
-```{r, echo=TRUE, tidy=TRUE}
+```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(BRAF_N_Hist, pERK_N_Hist, nrow = 2)
 ```
 The most extreme outlier for each protein was determined using the `outlier()` function, inconjunction with filtering.
-```{r, echo=TRUE, tidy=TRUE}
+```{r, echo=TRUE, tidy=TRUE, results = 'hide'}
 ds_filled_NaN[ds_filled_NaN$ARC_N == outlier(ds_filled_NaN$ARC_N), c(1,2,10,11,12,13)]
 ds_filled_NaN[ds_filled_NaN$BRAF_N == outlier(ds_filled_NaN$BRAF_N),c(1,3,10,11,12,13)]
 ds_filled_NaN[ds_filled_NaN$DYRK1A_N == outlier(ds_filled_NaN$DYRK1A_N),c(1,4,10,11,12,13)]
@@ -244,23 +244,26 @@ ds_filled_NaN[ds_filled_NaN$SOD1_N == outlier(ds_filled_NaN$SOD1_N),c(1,9,10,11,
 
 Max. Outlier Summary | ARC_N     |  BRAF_N  | DYRK1A_N | ITSN1_N | pERK_N  | pNUMB_N | S6_N   | SOD1_N 
 -------              | --------  |  --------| -------- | --------| --------| --------|--------|--------
-Value                | 0.0673    | 2.1334   | 2.5164   | 2.6027  |  3.5667 | 0.6311  | 3.5667 |  3.5667  
+Value                | 0.0673    | 2.1334   | 2.5164   | 2.6027  |  3.5667 | 0.6311  | 0.8226 | 1.8729  
 MouseID              | 3415      | 3484     | 3484     | 3484    |  3484   | 3497    | 3483   | 3411
-Genotype             | Control   | Control  | Control  | Control | Control | Control |  
-Treatment            | Memantine | Saline   | Saline   | Saline  | Saline  | Saline  |
-Behaviour            | C/S       | C/S      | C/S      | C/S     | C/S     | C/S     |
-Class                | c-CS-m    |  c-CS-m  | c-CS-m   | c-CS-s  | c-CS-s  | c-CS-s  |
+Genotype             | Control   | Control  | Control  | Control | Control | Control | Ts65Dn | Ts65Dn
+Treatment            | Memantine | Saline   | Saline   | Saline  | Saline  | Saline  | Saline | Memantine
+Behaviour            | C/S       | C/S      | C/S      | C/S     | C/S     | C/S     | C/S    | S/C
+Class                | c-CS-m    |  c-CS-m  | c-CS-m   | c-CS-s  | c-CS-s  | c-CS-s  | t-CS-s | t-SC-m
 
+* Mouse ID 3484 contributed 50% of the maximum outliers, and was dropped from the dataset.
 
-
-## MOUSE 3484 = OUTLIER REMOVAL BELOW
+### Data Preprocessing - Iteration 3
+#### Dropping MouseID 3484
 ```{r, echo = TRUE}
 ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
 ```
-* Comment on size
 
-Check scatter (qualitative at this stage)
-Plotted using same code as above
+* This gives a resultant dataset of size [13 variables by 1065 observations].
+
+### Data Exploration through Visualization
+#### Scatter Plot Matrix - MouseID 3484 dropped
+A blah blah was plotted ... Plotted using same code as above
 ```{r echo = FALSE, message = FALSE, results = 'hide', tidy = TRUE}
 scatter_matrix <- ggpairs(data = ds_filled_NaN,
         columns = target_attributes_proteins,
@@ -276,13 +279,12 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
 
-### Box Plots
+#### Box Plots for each Protein
 
-* Give one dem code then do all plots (add visible code to appendix also)
 ```{r, echo=FALSE}
 ARC_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ARC_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "ARC_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
@@ -290,20 +292,20 @@ ARC_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ARC_N, fil
 ```{r, echo=FALSE}
 BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "BRAF_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(ARC_N_Hist, BRAF_N_Hist, nrow = 2)
 ```
 
 ```{r, echo=FALSE}
 DYRK1A_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=DYRK1A_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "DYRK1A_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
@@ -311,20 +313,20 @@ DYRK1A_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=DYRK1A_
 ```{r, echo=FALSE}
 ITSN1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=ITSN1_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "ITSN1_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(DYRK1A_N_Hist, ITSN1_N_Hist, nrow = 2)
 ```
 
 ```{r, echo=FALSE}
 pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "pERK_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
@@ -332,20 +334,20 @@ pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, f
 ```{r, echo=FALSE}
 pNUMB_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pNUMB_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "pNUMB_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(pERK_N_Hist, pNUMB_N_Hist, nrow = 2)
 ```
 
 ```{r, echo=FALSE}
 S6_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=S6_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "S6_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
@@ -353,13 +355,13 @@ S6_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=S6_N, fill 
 ```{r, echo=FALSE}
 SOD1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=SOD1_N, fill = ds_filled_NaN$class)) + 
   geom_boxplot() + 
-  theme(legend.title=element_blank()) + 
+  theme(legend.title=element_blank(), axis.title = element_text(size=8)) + 
   labs(title = NULL,  x = "SOD1_N Expression", y = NULL) + 
   guides(fill = FALSE) + 
   coord_flip()
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 ```
 
@@ -372,86 +374,285 @@ _________________________
 
 ### STATS - Linear Relationships
 
+```{r vector for linear analysis, echo=TRUE, tidy=TRUE}
+target_attributes_linear <- c("BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N")
+```
+
+```{r echo = FALSE, message = FALSE, results = 'hide', tidy = TRUE}
+scatter_matrix <- ggpairs(data = ds_filled_NaN,
+        columns = target_attributes_linear,
+        mapping = aes(colour = class),
+        diag = list(continuous = wrap("densityDiag", alpha=I(0.1)), mapping = ggplot2::aes(fill=class)),
+        upper = list(continuous = wrap("density", alpha = I(0.5)), combo = "box"),
+        lower = list(continuous = wrap("points", alpha = I(0.4), size = 0.1)))
+scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
+                       axis.text = element_text(size = rel(0.5)),
+                       strip.text = element_text(face = "bold", size=7),
+                       strip.text.x = element_text(margin = margin(.1, 0, .1, 0, "cm")),
+                       strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
+scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
+```
+
+
 SCATTER PLOTS
-- Based on CLASS
+  
+* Based on CLASS
 * ITSN1_N vs DYRK1A_N
 * pERK_N vs DYRK1A_N
-* pERK_N vs ITSN1_N
-- Enlarged Scatter w/ tansparent hist
-- The value is that it is applicable accross all class, genotypes e.t.c, so these proteins aren't amenable to changes in profile accross the experimental conditions described / explored.
+* pERK_N vs BRAF_N
+* Enlarged Scatter w/ tansparent hist
+* The value is that it is applicable accross all class, genotypes e.t.c, so these proteins aren't amenable to changes in profile accross the experimental conditions described / explored.
+
+## Statistical Analysis Part 1 - Linear Regression and Correlation
+ADD GENERIC EXPLANATION
+The linear regression model function `lm()` was used, followed by `summary()` to output the required information for interpretation.
+
+* H0:The data do not fit the linear regression model
+* HA:The data fit the linear regression model
+
+### ITSN1_N vs DYRK1A_N
+#### Fitting the Data to a Linear Regression Model  
+* H0: Accross all eight classes of mice, the expression of ITSN1_N was not linearly dependent to the expression of DYRK1A_N
+* HA: Accross all eight classes of mice, the expression of ITSN1_N was linearly dependent to the expression of DYRK1A_N
+
+```{r, echo=TRUE, tidy=TRUE}
+ITSN1_N_VS_DYRK1A_N <- lm(ITSN1_N ~ DYRK1A_N, data = ds_filled_NaN)
+ITSN1_N_VS_DYRK1A_N %>% summary()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+ITSN1_N_VS_DYRK1A_N %>% anova()
+```
+  
+* The p-value of the observed F statistic was found to be 2.2e-16. As p is less than the 0.05 level of significance, we reject H0.
+
+#### The Constant, or Intercept Value  
+
+* H0:α=0 
+* HA:α≠0
+
+```{r, echo=TRUE, tidy=TRUE}
+ITSN1_N_VS_DYRK1A_N %>% summary() %>% coef()
+```
+  
+* t = 32.696, p < 0.001  
+The constant is statistically significant at the 0.05 level. This means that there is statistically significant evidence that the constant is not 0. Their would always be some amount of the target proteins being expressed.
+
+```{r, echo=TRUE, tidy=TRUE}
+ITSN1_N_VS_DYRK1A_N %>% confint()
+```
+    
+* 95% CI for the Intercept is found to be [0.167, 0.189]  
+H0:α=0 is not captured by this interval, so was rejected.
+
+#### The Slope
+  
+* H0:β=0
+* HA:β≠0
+
+```{r, echo=TRUE, tidy=TRUE}
+2*pt(q = 82.33567, df = 1063, lower.tail=FALSE)
+```
+
+As p < .05, we reject H0. There was statistically significant evidence that OUES was positively related to VO2VO2 max. The 95% CI for b was found to [1.013, 1.062]. This 95% CI does not capture H0, therefore it was rejected. 
+
+There was a statistically significant positive relationship between the expression of DYRK1A_N and ITSN1_N. 
+
+```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
+ITSN1_N_VS_DYRK1A_N_XY <- ggplot(data=ds_filled_NaN, aes(x=DYRK1A_N, y=ITSN1_N, colour = class))
+ITSN1_N_VS_DYRK1A_N_XY + 
+  geom_point(alpha = I(0.9), size = 0.8) + 
+  stat_smooth(method = "lm", col = "black", size = 0.5) +
+  labs(title = 'ITSN1_N versus DYRK1A_N Protein Expression Scatter Plot',  
+       y = 'ITSN1_N', 
+       x = 'DYRK1A_N') +
+  theme(legend.title = element_blank(), axis.title = element_text(size=8), title = element_text(size=9)) +
+  annotate("text", x = 0.75, y = 1.4, label = "R Squared") + 
+  annotate("text", x = 0.75, y = 1.3, label = format(summary(lm(ITSN1_N ~ DYRK1A_N, data = ds_filled_NaN))$r.squared, digits = 3))
+```
+
+
+******
+* These data exhibited a positive linear trend, when the expression of DYRK1A_N increases, so does that of ITSN1_N.
+* This finding tells us that the relationship of expression for ITSN1_N vs DYRK1A_N _NOT DEPENDENT ON THE 8 CLASSES THE MICE WERE GROUPED INTO - VERY INTERESTING_ 
+
+---------------
+
+# pERK_N vs DYRK1A_N
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_DYRK1A_N <- lm(pERK_N ~ DYRK1A_N, data = ds_filled_NaN)
+pERK_N_VS_DYRK1A_N %>% summary()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_DYRK1A_N %>% anova()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_DYRK1A_N %>% summary() %>% coef()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_DYRK1A_N %>% confint()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+2*pt(q = 83.524345, df = 1063, lower.tail=FALSE)
+```
+
+```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
+plot(pERK_N ~ DYRK1A_N, data = ds_filled_NaN, xlab = "DYRK1A_N", ylab = "pERK_N")
+abline(pERK_N_VS_DYRK1A_N, col = "red")
+```
+
+
+
+--------
+
+# pERK_N vs BRAF_N
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_BRAF_N <- lm(pERK_N ~ BRAF_N, data = ds_filled_NaN)
+pERK_N_VS_BRAF_N %>% summary()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_BRAF_N %>% anova()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_BRAF_N %>% summary() %>% coef()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+pERK_N_VS_BRAF_N %>% confint()
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+2*pt(q = 67.29879, df = 1063, lower.tail=FALSE)
+```
+
+```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
+plot(pERK_N ~ BRAF_N, data = ds_filled_NaN, xlab = "BRAF_N", ylab = "pERK_N")
+abline(pERK_N_VS_BRAF_N, col = "red")
+```
+
+
 
 _________________________
 
-### STATS - t-tests (dependent & independent)
+## Statistical Analysis Part 2 - Two-sample t-tests PAIRED TWO SAMPLE T-TESTS
 
-BAR CHARTS
-- Based on CLASS
-- Identify trends easily
-* ITSN1_N - CS is elavated, SC is depressed - compare t-tests (independent & dependent)
-* SOD1_N - Interesting from the point of distribution... CS is depressed, SC is elavated - compare t-test
-* Any paired t-tests for mouse to mouse will be interesting
-* Will break down by mice, then compare
-two mice from same class
-two mice from same treatment
-two mice from same genotype
-two mice from same behavior
-for one target protein
+The bar plots representing ITSN1_N and SOD1_N over all classes of mice were selected from the 'Data Exploration through Visualization' section of the analysis (displayed below). Selection for statistical analysis was performed in a qualitative fashion.  
 
-SHOULD I COMBINE BAR INTO MATRIX? Can't seem to do this.
+ Protein      | Qualitative Observation and Proposed Quantitative Analysis
+-------- | -----------------------------------------
+ITSN1_N       | The distributions and corresponding mean values occur in a series of pairs. It appears that first two components of each class (genotype and learning stimuli) are deterministic in the expression of ITSN1_N. This will be evaluated pair-wise using the two-sample t-test.
+SOD1_N | Expression of SOD1_N is determined predominantly by the learning stimuli applied. In the four classes of CS, the expression levels have tight distributions and similar means. In the four classes of SC, the expression levels have wide distributions, with varied means. This will be evaluated ...
 
-### Once outliers are removed, choose target protein and to t-tests 
-
-start with DESCRIPTIVE STATS
-
-* Will break down by mice, then compare
-two mice from same class
-two mice from same treatment
-two mice from same genotype
-two mice from same behavior
-for one target protein
-
-_____________________________
-
-Data was then checked for type, sample rows column names and size (found 1080 by 82). Data cleaning was initially performed by selecting for 11 target protein expression attributes, which had previously been found to have high correlations with learning outcomes. The Boolean categorical labels Treatment, Genotype and Behavior were then replaced with binary Boolean values 0 or 1, and the attribute label Class was generated with the resultant binary Boolean labels to produce 8 unique integer Class labels. A scatter matrix of the uncleaned data was checked to provide direction for analysis, followed by removal of outliers and NaN values. Outliers were identified as falling out a 99th percentile range from any raw protein expression data column. During outlier analysis mouse 3484 was identified as having over 60 outlier values, and was removed from the data set. The outliers and NaN values were then filled with a Class mean. 
-
-# Data Importation & Exploration
-
-The class .describe was used to check the data was successfully imported in the previous step. The output was as expected, containing the columns MouseID, Protein Expression (77 columns), Genotype, Treatment, Behavior and class, as described in the literature (Higuera 2015). The .describe class also gave us the size of data [1080 rows × 82 columns], which was consistent with the description of “Mice Protein Expression Data Set” (Higuera 2015). Due to the size of the data set some columns and rows were not displayed, so the class .columns was used to check the attributes had been imported as expected. The class .dtypes was then used to check the data was imported as the correct types. The objects Genotype, Treatment, Behavior and class were checked with .value_counts() to look for missing values, typos and assess if these were Boolean, with the results in table 2.
-
-The output above shows no missing values, no typos and shows Genotype, Treatment and Behavior are Boolean. As noted in table 2, the MouseID takes the form tag_n, where n is the number of measurements made. It was noted that the column class contained a lower-case c, which was replaced with an upper-case C and then checked, as below.
-
-The importation and initial exploration demonstrates we have successfully imported our data, of which there is a vast quantity, 1080 rows by 82 columns, and the data is both numerical and categorical. The next step will be selecting a subset of target proteins (based on observations by Higuera et al) for our analysis. NaN values for protein expression will be checked once the subset is chosen, to avoid unnecessary computation.
-
-As previously mentioned, NaN values for protein expression were to be checked after a subset (protein11) was selected, protein11.describe() was first used to check the numerical data, as seen below. Immediately, we can see the count for BRAF_N, pERK_N, pNUMB_N, DYRK1A_N, ITSN1_N and SOD1_N to be 1077, rather than 1080. 
-
-The native data contains both numerical (the protein expression levels) and categorical data (Genotype, Behavior, Treatment and Class). 
+```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
+grid.arrange(ITSN1_N_Hist, SOD1_N_Hist, nrow = 2)
+```
 
 
 
-Plots for protein expression
-https://stackoverflow.com/questions/20074061/ggplot2-multiple-factors-boxplot-with-scale-x-date-axis-in-r
+```{r, echo=TRUE, tidy=TRUE}
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_ARC_BRAF = BRAF_N - ARC_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_BRAF_DYRK1A = DYRK1A_N - BRAF_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_DYRK1A_ITSN1 = ITSN1_N - DYRK1A_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_ITSN1_pERK = pERK_N - ITSN1_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_pERK_pNUMB = pNUMB_N - pERK_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_pNUMB_S6 = S6_N - pNUMB_N)
+ds_filled_NaN <- ds_filled_NaN %>% mutate(d_S6_SOD1 = SOD1_N - S6_N)
+```
 
+```{r, echo=TRUE, tidy=TRUE}
+ds_cCSs <- ds_filled_NaN[(ds_filled_NaN$class == 'c-CS-s'),]
+```
 
+# ARC & BRAF for cCSs
 
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_ARC_BRAF, 
+       mu = 0, 
+       alternative = "two.sided")
+```
 
-
-
-
-dietGymFood_data_d %>%
-  summarise(
-  Min = min(d, na.rm = TRUE),
-  Q1 = quantile(d, probs = .25, na.rm = TRUE),
-  Median = median(d, na.rm = TRUE),
-  Q3 = quantile(d, probs = .75, na.rm = TRUE),
-  Max = max(d, na.rm = TRUE),
-  Mean = mean(d, na.rm = TRUE),
-  SD = sd(d, na.rm = TRUE),
-  n = n(),
-  Missing = sum(is.na(d))
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$ARC_N, ds_cCSs$BRAF_N),
+  xlab = "ARC_N",
+  ylab = "BRAF_N"
   )
-  
-Then perform linear regression tests
+```
 
+# BRAF & DYRK1A for cCSs
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_BRAF_DYRK1A, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$BRAF_N, ds_cCSs$DYRK1A_N),
+  xlab = "BRAF_N",
+  ylab = "DYRK1A_N"
+  )
+```
+
+# DYRK1A & ITSN1_N for cCSs
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_DYRK1A_ITSN1, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$DYRK1A_N, ds_cCSs$ITSN1_N),
+  xlab = "DYRK1A_N",
+  ylab = "ITSN1_N"
+  )
+```
+
+# ITSN1_N & pERK_N for cCSs
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_ITSN1_pERK, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$ITSN1_N, ds_cCSs$pERK_N),
+  xlab = "ITSN1_N",
+  ylab = "pERK_N"
+  )
+```
+
+# pERK_N & pNUMB for cCSs
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_pERK_pNUMB, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$ITSN1_N, ds_cCSs$pERK_N),
+  xlab = "ITSN1_N",
+  ylab = "pERK_N"
+  )
+```
+
+
+Then perform linear regression tests
 
 
 http://www.rpubs.com/smcclatchy/scatterplots
@@ -460,85 +661,9 @@ https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.htm
 http://rmarkdown.rstudio.com/lesson-3.html
 http://rmarkdown.rstudio.com/authoring_rcodechunks.html
 
-
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-
 ## Appendix
 
-### Data Exploration Cleaning
-These data 
-```{r checking the data - summary, echo = TRUE}
-summary(ds)
-```
-
-```{r checking the data - column names, echo = TRUE}
-column_names <- colnames(ds)
-column_names
-```
-
-```{r checking the data - MouseID, echo = TRUE}
-MouseID <- ds$MouseID
-MouseID
-```
-
-```{r checking the data - ds$MouseID cleaned, echo = TRUE}
-table(ds$MouseID)
-```
-
-```{r, echo = TRUE}
-all_target_attributes <- c("MouseID","BRAF_N","pERK_N","S6_N","pGSK3B_N","CaNA_N",
-                 "CDK5_N","pNUMB_N","DYRK1A_N","ITSN1_N","SOD1_N","GFAP_N",
-                 "Genotype","Treatment","Behavior","class")
-expression_attributes <- c("BRAF_N","pERK_N","S6_N","pGSK3B_N","CaNA_N",
-                 "CDK5_N","pNUMB_N","DYRK1A_N","ITSN1_N","SOD1_N","GFAP_N")
-```
-
-KEEP
-```{r, echo=TRUE}
-table(ds_filtered$Genotype)
-```
-
-```{r, echo=TRUE}
-table(ds_filtered$Treatment)
-```
-
-```{r, echo=TRUE}
-table(ds_filtered$Behavior)
-```
-
-```{r, echo=TRUE}
-table(ds_filtered$class)
-```
-
 # References
-
-
-```{r, echo = TRUE}
-scatter_matrix <- ggpairs(data = ds_filled_NaN, # data.frame with variables
-        columns = target_attributes_proteins, # columns to plot, default to all.
-        #title = "", # title of the plot
-        mapping = aes(colour = class), # aesthetics, ggplot2 style
-        upper = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
-        lower = list(continuous = wrap("points", alpha = 0.3, size = 0.1), 
-                     combo = wrap("dot", alpha = 0.4, size=0.2)))
-scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
-                       axis.text = element_text(size = rel(0.5)),
-                       #axis.text.x = element_text(margin = margin(t = 0.2), vjust = 0.5), 
-                       #axis.text.y = element_text(margin = margin(r = 0.2), hjust = 0.5),
-                       #axis.title.x = element_text(size = 0.5, angle = 90),
-                       strip.text=element_text(size=6))
-```
 
 [^1]: Higuera, C., Gardiner, K. J., & Cios, K. J. (2015). Self-Organizing Feature Maps Identyfy Proteins Critical to Learning in a Mouse Model of Down Syndrome. PLoS ONE, 10(6).
 [^2]: Ahmed, M. M., Dhanasekaran, A. R., Block, A., Tong, S., Costa, A. C. S., Stasko, M., & Gardiner, K. J. (2014). Protein Dynamics Associated with Failed and Rescues Learning in the TS65Dn Mouse Model of Down Syndrome. PLoS ONE, 10(3).
@@ -550,24 +675,18 @@ scatter_matrix + theme(panel.spacing=grid::unit(0,"lines"),
 [^8]: https://docs.google.com/spreadsheets/d/1scXPvhOh3kmANCAhf1X_CLwJQckOJA-WMP_f9lHVri4/edit?usp=sharing, CONTROL MICE PROTEINS http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s003, TRISOMIC MICE PROTEINS, http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s004 
 
 
-
-
-
 Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. Computing in Science & Engineering, 9(3), 90-95.
 McKinney, W. (2010). Data Structures for Statistical Computing in Python.
 
 Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., . . . Duchesnay, É. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830.
 Pérez, F., & Granger, B. E. (2007). IPython: A System for Interactive Scientific Computing. Computing in Science & Engineering, 9(3), 21-29. 
 
-
-
 R Chunk Options https://yihui.name/knitr/options/
 R Density Plot Options http://www.sthda.com/english/wiki/ggplot2-density-plot-quick-start-guide-r-software-and-data-visualization 
 
 
-```{r, echo=TRUE, tidy=TRUE}
-test1 <- ds_filled_NaN[ds_filled_NaN$S6_N == outlier(ds_filled_NaN$S6_N),c(1,8,10,11,12,13)]
-test2 <- ds_filled_NaN[ds_filled_NaN$SOD1_N == outlier(ds_filled_NaN$SOD1_N),c(1,9,10,11,12,13)]
-tab_summary(test1, test2)
-```
 
+```{r, echo=TRUE, tidy=TRUE}
+write.csv(ds_filled_NaN, file = "mouse_data_preprocessed.csv")
+ITSN1_N_Data <- gsheet2tbl('https://docs.google.com/spreadsheets/d/131cuxxEJ__jexUuEcfjwoDvRJq1FR3XfbP5YAzSD5Bw/edit?usp=sharing')
+```
