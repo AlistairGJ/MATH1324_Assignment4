@@ -39,20 +39,44 @@ library(outliers)
 # Statistical Evaluation of Mice Protein Expression Data Set
 
 ### Executive Summary
+The data (‘Mice Protein Expression Data Set’) was collected online (UCI Machine Learning), consisting of 1080 observations over 82 variables. These data consisted of continuous numerical protein expression data, and categorical data including mouse identification and variable exposure. After data exploration, visualization and data preprocessing, two modes of statistical analysis were employed. The first was linear regression analysis. Prior to fitting any regression, a scatter plot assessing the bi variate relationship between the relevant proteins was inspected. In the three relationships considered, the scatter plots demonstrated evidence of a positive linear relationship. A linear regression model was fitted to predict the dependent variable, ITSN1_N, using measurements of DYRK1A_N over all classes of mice. The overall regression model was statistically significant, F(1,1063)=6779.2, p<.001, and explained 86.5% of the variability in ITSN1_N.A linear regression model was fitted to predict the dependent variable, pERK_N, using measurements of DYRK1A_N over all classes of mice. The overall regression model was statistically significant, F(1,1063)=6976.3, p<.001, and explained 86.8% of the variability in pERK_N. A linear regression model was fitted to predict the dependent variable, pERK_N, using measurements of BRAF_N over all classes of mice. The overall regression model was statistically significant, F(1,1063)=4529.1, p<.001, and explained 81.0% of the variability in pERK_N. For all three regression models the 95% CI for the intercept did not pass through 0, which simply indicated the presence of a background, or base, level of protein. For the class c-CS-s, 7 paired t-tests were performed. For ARC_N and BRAF_N (n = 120), the mean difference was found to be -0.256 (SD = 0.101), with t(df=119) = 27.724, p < 0.001, 95% [0.238, 0.274]. There was a statistically significant mean difference. For BRAF_N and DYRK1A_N (n = 120), the mean difference was found to be -0.047 (SD = 0.058), with t(df=119) = 8.871, p < 0.001, 95% [0.037, 0.058]. There was a statistically significant mean difference. For DYRK1A_N and ITSN1_N (n = 120), the mean difference was found to be -0.189 (SD = 0.061), with t(df=119) = 34.216, p < 0.001, 95% [0.178, 0.200]. There was a statistically significant mean difference. For ITSN1_N and pERK_N (n = 120), the mean difference was found to be 0.006 (SD = 0.094), with t(df=119) = -0.696, p > 0.005, 95% [-0.023, 0.011].There was no statistically significant mean difference. For pERK_N and pNUMB_N (n = 120), the mean difference was found to be 0.200 (SD = 0.132), with t(df=119) = -16.569, p < 0.001, 95% [-0.224, -0.176]. There was a statistically significant mean difference. For pNUMB_N and S6_N (n = 120), the mean difference was found to be -0.048 (SD = 0.136), with t(df=119) = 3.892, p < 0.001, 95% [0.024, 0.073]. There was a statistically significant mean difference. For S6_N and SOD1_N (n = 120), the mean difference was found to be 0.125 (SD = 0.131), with t(df=119) = -10.45, p < 0.001, 95% [-0.148, -0.101]. There was a statistically significant mean difference. QQ plots were not used due to all sample and sub sample sizes (n > 30, normality assumed). The `granovo.ds()` function was used to provide  dependent sample assessment plots and summary stats.  
 
-### Hypothesis
-Comment on not needed to be normalized in preprocessing
+### Hypothesis Testing
+
+The first statistical analysis will involve linear regression, with the following hypothesis testing:
+
+##### Linear Regression  
+* H0:The data do not fit the linear regression model
+* HA:The data fit the linear regression model
+
+##### The Constant, or Intercept Value 
+* H0:α=0
+* HA:α≠0
+
+##### Slope  
+* H0:β=0
+* HA:β≠0
+
+The second statistical analysis will involve the paired-sample t-test, with the following hypothesis:    
+
+#### Paired-sample t-test
+* H0:μΔ=0
+* HA:μΔ≠0
 
 ### Introduction
-The chosen dataset ‘Mice Protein Expression Data Set’ was generated from experiments by Higuera et al[^1] and Ahmed et al[^2]. These projects aimed to understand the impacts of Down Syndrome on learning through analysis of protein expression in mice. Down Syndrome (DS) has a prevalence globally of 1 in a 1000 live human births, and is the most common genetically defined cause of intellectual disabilities^1,^[^3]. DS in humans is caused by the presence of an additional chromosome 21, referred to as trisomy^3^. Protein expression is disrupted by human trisomy 21, leading to the physical and intellectual manifestations associated with DS. Due to its prevalence and health implications, a strong imperative exists to further understand and treat the condition.  
+The chosen data set ‘Mice Protein Expression Data Set’ was generated from experiments by Higuera et al[^1] and Ahmed et al[^2]. These projects aimed to understand the impacts of Down Syndrome on learning through analysis of protein expression in mice. Down Syndrome (DS) has a prevalence globally of 1 in a 1000 live human births, and is the most common genetically defined cause of intellectual disabilities^1,^[^3]. DS in humans is caused by the presence of an additional chromosome 21, referred to as trisomy^3^. Protein expression is disrupted by human trisomy 21, leading to the physical and intellectual manifestations associated with DS. Due to its prevalence and health implications, a strong imperative exists to further understand and treat the condition.  
 
-Davisson et al., successfully manipulated a mouse genome to produce several models of DS in rodents[^4]. The Ts65Dn mouse is the best-characterized of the DS rodent models[^5]. In generating the 'Mice Protein Expression Data Set' Higuera et al employed Ts65Dn and normal mice in experimental and control groups, exposing them to a range of variables. The rodents were then euthanized and their cortex protein levels were analysed in a quantitative fashion. From three binary variables, eight classes of mice were used to generate the data set. The eight classes are summarised in Figure 1.  
+Davisson et al., successfully manipulated a mouse genome to produce several models of DS in rodents[^4]. Known as 'Ts65Dn' this mouse is the best-characterized of the DS rodent models[^5]. In generating the 'Mice Protein Expression Data Set' Higuera et al employed Ts65Dn and normal mice in experimental and control groups, exposing them to a range of variables. The rodents were then euthanized and their cortex protein levels were analysed in a quantitative fashion. From three binary variables, eight classes of mice were used to generate the data set. The eight classes are summarized in Figure 1.  
 
-The work of Higuera et al and Ahmed et al aimed to assess the efficacy of pharmacotherapies for treatment of DS - an avenue of treatment that has never been successfully implemented. Ahmed et al statistically evaluated the ‘Mice Protein Expression Data Set’ through the use of the Wilcoxon test, with the subsequent production of 'self-organising maps' to assess proteins critical to learning. Higuera et al also used pair-wise comparisons to evaluate the significance of difference between pairs of the classes, specifically to assess protein dynamics.   
+The work of Higuera et al and Ahmed et al aimed to assess the efficacy of pharmacotherapies for treatment of DS - an avenue of treatment that has never been successfully implemented. Ahmed et al statistically evaluated the ‘Mice Protein Expression Data Set’ through the use of the Wilcoxon test, with the subsequent production of 'self-organizing maps' to assess proteins critical to learning. Higuera et al also used pair-wise comparisons to evaluate the significance of difference between pairs of the classes, specifically to assess protein dynamics.   
+
+In this analysis of the ‘Mice Protein Expression Data Set’ linear relationships between protein expression levels will be statistically evaluated, followed by pair sample t-tests on protein expression for mice in the class 'c-CS-s'.  
+
 <br>
 <center>
-![](http://journals.plos.org/plosone/article/figure/image?size=medium&id=10.1371/journal.pone.0129126.g001)
+<img src="http://journals.plos.org/plosone/article/figure/image?size=medium&id=10.1371/journal.pone.0129126.g001" width="400" height="400" />
 </center>  
+
 <br>
 _Fig 1. Classes of mice. (A) There are eight classes of mice based on genotype (control, c, and trisomy, t), stimulation to learn (Context-Shock, CS, and Shock-Context, SC) and treatment (saline, s, and memantine, m). Learning outcome indicates the response to learning for each class. (B) Number of mice in each class. (C) Format of protein expression data: rows are individual mice, and columns, P 1 … P77, are the measured levels of the 77 proteins[^6]._
 
@@ -60,41 +84,38 @@ _Fig 1. Classes of mice. (A) There are eight classes of mice based on genotype (
 The libraries `rmarkdown`, `GGally`, `car`, `ggplot2`, `dplyr`, `gsheet`, `gridExtra`,`htmltools`, `reshape2`, `granova`, `psychometric`, `Hmisc`, `qwraps` & `outliers` were employed during the analysis.
 
 ### Data Set  
-The Excel file ‘Data_Cortex_Nuclear.xls’ was downloaded from UCI’s machine learning repository[^7] into Google Drive (s3644119 at RMIT University) and the imported into the RStudio interactive environment as “ds”.
-
+The Excel file ‘Data_Cortex_Nuclear.xls’ was downloaded from UCI’s machine learning repository[^7] into Google Drive (s3644119 at RMIT University) and the imported into the R Studio interactive environment as “ds”.
 ```{r importing the dataset, tidy=TRUE, echo=TRUE}
 url <- 'https://docs.google.com/spreadsheets/d/158zPd4XCYoaXNzHA2OJPkOmzSWYjwFoEuOiMzV1O-rU/edit?usp=sharing'
 ds <- gsheet2tbl(url)
 ```
 
 ### Data Checking
-The initial data checking is summarized below.
+The initial data checking is summarized below (functioning code in Appendix).
 
  Function | Purpose / Outcome
 ------------- | -------------------------------------------------
 `summary(ds)` | Confirming the successful importation of the data set. Size was 1080 observations over 82 variables. The 77 protein attributes are continuous numerical data, with NaN values present.
-`colnames(ds)` | Confirming the column names present in the dataset. The first column is MouseID (12 - 15 observations per mouse, per protein). The final four columns contain the categorical data about each mouse.
+`colnames(ds)` | Confirming the column names present in the data set. The first column is MouseID (12 - 15 observations per mouse, per protein). The final four columns contain the categorical data about each mouse.
 `MouseID <- ds$MouseID` | Each mouseID is appended with the suffix '_n' (where 1 <- n <- 15). For example MouseID '309' is recorded as 309_1, 309_2, ... 309_15.
 
--------------------
-
 ### Data Preprocessing - Iteration 1
-The native data set will be preprocessed in two iterations for use in our analysis. These data were collected such that they are all on the same scale (approximately 0 - 4) and are intended for direct comparison without any transformation (for example a value of 0.1 for protein A and 1.0 for protein B shows that protein B is being expressed 10 times protein A). Therefore no normalization was needed for these data.
+The native data set will be preprocessed in four iterations for use in our analysis. These data were collected such that they are all on the same scale (approximately 0 - 4) and are intended for direct comparison without any transformation (for example a value of 0.1 for protein A and 1.0 for protein B shows that protein B is expressed 10 times that of protein A). The only transformation performed on these data was column subtraction, for pair t-test analysis (see Data Preprocessing - Iteration 3).
 
 #### Stripping the measurement count from each mouse
-During data collection, per each individual mouse, per each protein, 12 - 15 expression measurements were taken _in vitro_. As mentioned in the summary above, these were denoted as '_n' (where 1 <- n <- 15). For the purpose of this investigation, the _n notation is not required, and will be stripped from the data. 
+During data collection, per each individual mouse, per each protein, 12 - 15 expression measurements were taken _in vitro_. As mentioned in the summary above, these were denoted as '_n' (where 1 <- n <- 15). For the purpose of this investigation, the _n notation is not required, and will be stripped from the data. The function `table(head(ds$MouseID, 150))` samples the first 10 mice in the data set, showing successful removal of _n notation.
 ```{r cleaning the data - Stripping MouseID_n, echo=TRUE, tidy=TRUE}
 MouseID <- gsub("\\_.*", "", ds$MouseID)
 ds$MouseID <- MouseID
 ```
-The function `table(head(ds$MouseID, 150))` samples the first 10 mice in the data set, showing successful removal of _n notation.
+
 ```{r checking the data - ds$MouseID cleaned (first 10 mice), echo=TRUE, tidy=TRUE}
 table(head(ds$MouseID, 150))
 ```
 <br>
 
 #### Selecting the target proteins & creating a new dataset
-Through the use of self-organizing feature maps, Higuera et al were able to determine the most discriminant proteins in comparison of the control mice classes and the trisomic mice classes^1^. For this analysis, these tabulated results were assessed in a semi-quantitative fashion[^8] and the proteins ARC_N, BRAF_N, DYRK1A_N, ITSN1_N, pERK_N, pNUMB_N, S6_N & SOD1_N were selected. A vector of these identifiers was created as `target_attributes_proteins`. These target proteins, along with the categorical tags Genotype, Treatment, Behavior and class were added to another vector, `target_attributes_all`. A new data set was then created, with the native data set observations for only the variables named in the `target_attributes_all` vector.
+Through the use of self-organizing feature maps, Higuera et al were able to determine the most discriminant proteins in comparison of the control mice classes and the trisomic mice classes^1^. For this analysis, these tabulated results were assessed in a semi-quantitative fashion[^8] and the proteins ARC_N, BRAF_N, DYRK1A_N, ITSN1_N, pERK_N, pNUMB_N, S6_N & SOD1_N were selected. A vector of these identifiers was created as `target_attributes_proteins`. These target proteins, along with the categorical tags Genotype, Treatment, Behavior and class were added to another vector, `target_attributes_all`. A new data set, `ds_filtered` was then created, with the native data set observations for the variables of the `target_attributes_all` vector.
 ```{r vector of target proteins for statistical analysis, echo=TRUE, tidy=TRUE}
 target_attributes_proteins <- c("ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N",
                            "pNUMB_N", "S6_N", "SOD1_N")
@@ -109,14 +130,14 @@ target_attributes_all <- c("MouseID","ARC_N", "BRAF_N", "DYRK1A_N", "ITSN1_N", "
 ds_filtered <- ds[,target_attributes_all]
 ```
 
-#### Checking the filtered data set
+#### Checking the data set ds_filtered
 The categorical values in `ds_filtered` were checked with `unique(ds_filtered[,10:13])`, not typographical errors were present, as below.
 ```{r filtering the categorical values, echo=TRUE, tidy=TRUE}
 categorical_counts <- ds_filtered[,10:13]
 unique(categorical_counts)
 ```
 
-The categorical variable counts are summarized in the below (functions in column one).
+The categorical variable counts are summarized in the below (functions executed in Appendix).
 
  Function | Counts | Total
 ----- | ---------------------------------------- | ----------
@@ -125,11 +146,9 @@ The categorical variable counts are summarized in the below (functions in column
 `table(ds_filtered$Behavior)`  | C/S = 525, S/C = 555                      | 1080
 `table(ds_filtered$class)`     | c-CS-m = 150,  c-CS-s = 135,  c-SC-m = 150,  c-SC-s = 135,   t-CS-m = 135, t-CS-s = 105, t-SC-m = 135, t-SC-s = 135  | 1080
 
--------------------
-
 ### Data Preprocessing - Iteration 2
 #### Locating NaN Values
-The coordinate locations for NaN values are displayed below (the result output was transposed for readability). The expression `ds_filtered[c(988, 989, 990),c(1, 10, 11, 12, 13)]` was used to identify the mouse/mice and correspoding categories.
+The coordinate locations for NaN values are displayed below (the result output was transposed for readability). The expression `ds_filtered[c(988, 989, 990),c(1, 10, 11, 12, 13)]` was used to identify the mouse/mice and corresponding categories.
 ```{r locating NaN, echo=TRUE, tidy=TRUE}
 t(which(is.na(ds_filtered), arr.ind=TRUE))
 ```
@@ -155,7 +174,7 @@ write.csv(ds_filtered, file = "mouse_data_filtered.csv")
 ds_filled_NaN <- gsheet2tbl('https://docs.google.com/spreadsheets/d/1FKFINItxyosgFhwiihpT3MSuMTxR-LaYPNG_XNctwlU/edit?usp=sharing')
 ```
 
-The filtered mouse data was exported using `write.csv(ds_filtered, file = "mouse_data_filtered.csv")` and added to Google Sheets. The NaN values were filled as follows BRAF_N = 0.2867, DYRK1A_N = 0.3375, ITSN1_N = 0.5491, pERK_N = 0.3577, pNUMB_N = 0.3577 and SOD1_N = 0.7214. The dataset was then imported as `ds_Filled_NaN`. These data were checked for NaN as follows.
+The filtered mouse data was exported using `write.csv` and added to Google Sheets. The NaN values were filled as follows BRAF_N = 0.2867, DYRK1A_N = 0.3375, ITSN1_N = 0.5491, pERK_N = 0.3577, pNUMB_N = 0.3577 and SOD1_N = 0.7214. The data set was then imported as `ds_Filled_NaN`. These data were checked for NaN as follows.
 
 ```{r checking NaN in ds_filled, echo=TRUE, tidy=TRUE}
 NaN_check <- ds_filled_NaN[tSCs_filter, NaN_column_mask]
@@ -171,11 +190,9 @@ Delta Mean             |  0.0000 |  0.0000  |  0.0000 |  0.0000 |  0.0000 |  0.0
 
 * All mean values remained the same to four decimal places.
 
--------------------
-
 ### Data Exploration through Visualization
 #### Scatter Plot Matrix
-The preprocessed data will first be visualized with a scatter plot matrix using the `ggpairs` function. The upper section of the plot will be an xy contour, the lower an xy scatter and the diagonal a density plot. A scatter plot matrix is a suitable at this stage as it gives a quantitative overview of these data and provides direction for futher analysis.
+The preprocessed data will first be visualized with a scatter plot matrix using the `ggpairs` function. The upper section of the plot will be an xy contour, the lower an xy scatter and the diagonal density plots. A scatter plot matrix is a suitable at this stage as it gives a quantitative overview of these data and provides direction for further analysis.
 
 * Note scatter plot matrix code will be displayed only once.
 
@@ -193,7 +210,7 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
                        strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
-The resultant plot 'scatter plot matrix A', shows six of the proteins to be correlated in a linear fashion; 
+The resultant plot, shows six of the proteins to be correlated (qualitatively) in a linear fashion; 
 
 * DYRK1A_N vs BRAF_N
 * ITSN1_N vs BRAF_N
@@ -204,10 +221,12 @@ The resultant plot 'scatter plot matrix A', shows six of the proteins to be corr
 
 This will provide direction for subsequent statistical analysis.  
 
-Other trends noticable include inversely proportional relationships (e.g., SOD1_N vs BRAF_N), weak correlation (e.g., pNUMB_N vs BRAF_N) and no correlation (e.g., pNUMB_N vs ARC_N). Also of note, in the columns ARC_N, BRAF_N, DYRK1A_N, ITSN1_N and pERK_N, a series of points (amber colour) are seen to lay outside the main clusters in every indivdual scatter plot. Bar charts for two target proteins exhibiting these outliers were plotted (these proteins were randomely chosen.
+Other trends noticeable include inversely proportional relationships (e.g., SOD1_N vs BRAF_N), weak correlation (e.g., pNUMB_N vs BRAF_N) and no correlation (e.g., pNUMB_N vs ARC_N). Also of note, in the columns ARC_N, BRAF_N, DYRK1A_N, ITSN1_N and pERK_N, a series of points (amber colour) are seen to lay outside the main clusters in every individual scatter plot. Bar charts for two target proteins exhibiting these outliers were plotted.
 
 #### Bar Chart for pERK & BRAF
-The resultant plots show these outliers to be very significantly far from the mean of the relavent class, 'c-CS-s'.
+The resultant plots show clusters of outliers for the class, 'c-CS-s'.
+  
+* Note box plot code will be displayed only once.
 
 ```{r, echo=TRUE, tidy=TRUE}
 BRAF_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=BRAF_N, fill = ds_filled_NaN$class)) + 
@@ -230,7 +249,7 @@ pERK_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=pERK_N, f
 ```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(BRAF_N_Hist, pERK_N_Hist, nrow = 2)
 ```
-The most extreme outlier for each protein was determined using the `outlier()` function, inconjunction with filtering.
+The most extreme outlier for each protein was determined using the `outlier()` function, in conjunction with filtering.
 ```{r, echo=TRUE, tidy=TRUE, results = 'hide'}
 ds_filled_NaN[ds_filled_NaN$ARC_N == outlier(ds_filled_NaN$ARC_N), c(1,2,10,11,12,13)]
 ds_filled_NaN[ds_filled_NaN$BRAF_N == outlier(ds_filled_NaN$BRAF_N),c(1,3,10,11,12,13)]
@@ -251,7 +270,7 @@ Treatment            | Memantine | Saline   | Saline   | Saline  | Saline  | Sal
 Behaviour            | C/S       | C/S      | C/S      | C/S     | C/S     | C/S     | C/S    | S/C
 Class                | c-CS-m    |  c-CS-m  | c-CS-m   | c-CS-s  | c-CS-s  | c-CS-s  | t-CS-s | t-SC-m
 
-* Mouse ID 3484 contributed 50% of the maximum outliers, and was dropped from the dataset.
+* Mouse ID 3484 contributed 50% of the maximum outliers, and was dropped from the data set.
 
 ### Data Preprocessing - Iteration 3
 #### Dropping MouseID 3484
@@ -259,11 +278,11 @@ Class                | c-CS-m    |  c-CS-m  | c-CS-m   | c-CS-s  | c-CS-s  | c-C
 ds_filled_NaN <- ds_filled_NaN[!(ds_filled_NaN$MouseID == 3484),]
 ```
 
-* This gives a resultant dataset of size [13 variables by 1065 observations].
+* This gives a resultant data set of size [13 variables by 1065 observations].
 
 ### Data Exploration through Visualization
 #### Scatter Plot Matrix - MouseID 3484 dropped
-A blah blah was plotted ... Plotted using same code as above
+
 ```{r echo = FALSE, message = FALSE, results = 'hide', tidy = TRUE}
 scatter_matrix <- ggpairs(data = ds_filled_NaN,
         columns = target_attributes_proteins,
@@ -364,15 +383,22 @@ SOD1_N_Hist <- ggplot(data=ds_filled_NaN, aes(x=ds_filled_NaN$class, y=SOD1_N, f
 ```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
 grid.arrange(S6_N_Hist, SOD1_N_Hist, nrow = 2)
 ```
+The bar plots were an excellent source of qualitative information. As demonstrated for ITSN1_N and SOD1_N, below.
 
-* Discuss hist and also talk about number of point (sample, population, QQ plots ...)
+ Protein      | Qualitative Observation
+--------      | -----------------------------------------
+ITSN1_N       | The distributions and corresponding mean values occur in a series of pairs. It appears that first two components of each class (genotype and learning stimuli) are deterministic in the expression of ITSN1_N.
+SOD1_N | Expression of SOD1_N is determined predominantly by the learning stimuli applied. In the four classes of CS, the expression levels have tight distributions and similar means. In the four classes of SC, the expression levels have wide distributions, with varied means.
 
-##### Begin box plots (detect and deal with outliers)
-##### All 8 classes per 9 target proteins OR ...?
+## Statistical Analysis Part 1 - Linear Regression and Correlation
 
-_________________________
+Of the 6 previously mentioned pairs of qualitative linear relationships, three will be used for statistical analysis.  
 
-### STATS - Linear Relationships
+* ITSN1_N vs DYRK1A_N
+* pERK_N vs DYRK1A_N
+* pERK_N vs BRAF_N
+
+For each pair of target proteins, all classes will be analyzed together. If linear relationships are statistically significant, this will indicate the dependent relationships are maintained over the changes in genotype, treatment and behaviour.
 
 ```{r vector for linear analysis, echo=TRUE, tidy=TRUE}
 target_attributes_linear <- c("BRAF_N", "DYRK1A_N", "ITSN1_N", "pERK_N")
@@ -392,23 +418,6 @@ scatter_matrix_adjusted <- scatter_matrix + theme(panel.spacing=grid::unit(0,"li
                        strip.text.y = element_text(margin = margin(0, .1, 0, .1, "cm")))
 scatter_matrix_adjusted + theme(panel.border = element_rect(fill = NA, colour = "grey30", size = 0.2))
 ```
-
-
-SCATTER PLOTS
-  
-* Based on CLASS
-* ITSN1_N vs DYRK1A_N
-* pERK_N vs DYRK1A_N
-* pERK_N vs BRAF_N
-* Enlarged Scatter w/ tansparent hist
-* The value is that it is applicable accross all class, genotypes e.t.c, so these proteins aren't amenable to changes in profile accross the experimental conditions described / explored.
-
-## Statistical Analysis Part 1 - Linear Regression and Correlation
-ADD GENERIC EXPLANATION
-The linear regression model function `lm()` was used, followed by `summary()` to output the required information for interpretation.
-
-* H0:The data do not fit the linear regression model
-* HA:The data fit the linear regression model
 
 ### ITSN1_N vs DYRK1A_N
 #### Fitting the Data to a Linear Regression Model  
@@ -454,7 +463,7 @@ H0:α=0 is not captured by this interval, so was rejected.
 2*pt(q = 82.33567, df = 1063, lower.tail=FALSE)
 ```
 
-As p < .05, we reject H0. There was statistically significant evidence that OUES was positively related to VO2VO2 max. The 95% CI for b was found to [1.013, 1.062]. This 95% CI does not capture H0, therefore it was rejected. 
+As p < .05, we reject H0. The 95% CI for b was found to [1.013, 1.062]. This 95% CI does not capture H0, therefore it was rejected.   
 
 There was a statistically significant positive relationship between the expression of DYRK1A_N and ITSN1_N. 
 
@@ -467,18 +476,14 @@ ITSN1_N_VS_DYRK1A_N_XY +
        y = 'ITSN1_N', 
        x = 'DYRK1A_N') +
   theme(legend.title = element_blank(), axis.title = element_text(size=8), title = element_text(size=9)) +
-  annotate("text", x = 0.75, y = 1.4, label = "R Squared") + 
-  annotate("text", x = 0.75, y = 1.3, label = format(summary(lm(ITSN1_N ~ DYRK1A_N, data = ds_filled_NaN))$r.squared, digits = 3))
+  annotate("text", x = 0.6, y = 1.25, label = "R Squared") + 
+  annotate("text", x = 0.6, y = 1.15, label = format(summary(lm(ITSN1_N ~ DYRK1A_N, data = ds_filled_NaN))$r.squared, digits = 3))
 ```
 
-
-******
-* These data exhibited a positive linear trend, when the expression of DYRK1A_N increases, so does that of ITSN1_N.
-* This finding tells us that the relationship of expression for ITSN1_N vs DYRK1A_N _NOT DEPENDENT ON THE 8 CLASSES THE MICE WERE GROUPED INTO - VERY INTERESTING_ 
-
----------------
-
-# pERK_N vs DYRK1A_N
+### pERK_N vs DYRK1A_N
+#### Fitting the Data to a Linear Regression Model  
+* H0: Accross all eight classes of mice, the expression of pERK_N was not linearly dependent to the expression of DYRK1A_N
+* HA: Accross all eight classes of mice, the expression of pERK_N was linearly dependent to the expression of DYRK1A_N
 
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_DYRK1A_N <- lm(pERK_N ~ DYRK1A_N, data = ds_filled_NaN)
@@ -488,29 +493,58 @@ pERK_N_VS_DYRK1A_N %>% summary()
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_DYRK1A_N %>% anova()
 ```
+  
+* The p-value of the observed F statistic was found to be 2.2e-16. As p is less than the 0.05 level of significance, we reject H0.
+
+#### The Constant, or Intercept Value  
+
+* H0:α=0 
+* HA:α≠0
 
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_DYRK1A_N %>% summary() %>% coef()
 ```
 
+* t = -6.631, p < 0.001  
+The constant is statistically significant at the 0.05 level. This means that there is statistically significant evidence that the constant is not 0. Their would always be some amount of the target proteins being expressed.
+
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_DYRK1A_N %>% confint()
 ```
+
+* 95% CI for the Intercept is found to be [-0.062, -0.034]  
+H0:α=0 is not captured by this interval, so was rejected.
+
+#### The Slope
+  
+* H0:β=0
+* HA:β≠0
 
 ```{r, echo=TRUE, tidy=TRUE}
 2*pt(q = 83.524345, df = 1063, lower.tail=FALSE)
 ```
 
+As p < .05, we reject H0. The 95% CI for b was found to [1.369, 1.434]. This 95% CI does not capture H0, therefore it was rejected.  
+
+There was a statistically significant positive relationship between the expression of pERK_N and DYRK1A_N. 
+
 ```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
-plot(pERK_N ~ DYRK1A_N, data = ds_filled_NaN, xlab = "DYRK1A_N", ylab = "pERK_N")
-abline(pERK_N_VS_DYRK1A_N, col = "red")
+pERK_N_VS_DYRK1A_N_XY <- ggplot(data=ds_filled_NaN, aes(x=DYRK1A_N, y=pERK_N, colour = class))
+pERK_N_VS_DYRK1A_N_XY + 
+  geom_point(alpha = I(0.9), size = 0.8) + 
+  stat_smooth(method = "lm", col = "black", size = 0.5) +
+  labs(title = 'pERK_N versus DYRK1A_N Protein Expression Scatter Plot',  
+       y = 'pERK_N', 
+       x = 'DYRK1A_N') +
+  theme(legend.title = element_blank(), axis.title = element_text(size=8), title = element_text(size=9)) +
+  annotate("text", x = 0.6, y = 1.3, label = "R Squared") + 
+  annotate("text", x = 0.6, y = 1.2, label = format(summary(lm(pERK_N ~ DYRK1A_N, data = ds_filled_NaN))$r.squared, digits = 3))
 ```
 
-
-
---------
-
-# pERK_N vs BRAF_N
+### pERK_N vs BRAF_N
+#### Fitting the Data to a Linear Regression Model  
+* H0: Accross all eight classes of mice, the expression of pERK_N was not linearly dependent to the expression of BRAF_N
+* HA: Accross all eight classes of mice, the expression of pERK_N was linearly dependent to the expression of BRAF_N
 
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_BRAF_N <- lm(pERK_N ~ BRAF_N, data = ds_filled_NaN)
@@ -521,42 +555,56 @@ pERK_N_VS_BRAF_N %>% summary()
 pERK_N_VS_BRAF_N %>% anova()
 ```
 
+* The p-value of the observed F statistic was found to be 2.2e-16. As p is less than the 0.05 level of significance, we reject H0.
+
+#### The Constant, or Intercept Value  
+
+* H0:α=0 
+* HA:α≠0
+
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_BRAF_N %>% summary() %>% coef()
 ```
+
+* t = -7.228, p < 0.001  
+The constant is statistically significant at the 0.05 level. This means that there is statistically significant evidence that the constant is not 0. Their would always be some amount of the target proteins being expressed.
 
 ```{r, echo=TRUE, tidy=TRUE}
 pERK_N_VS_BRAF_N %>% confint()
 ```
 
+* 95% CI for the Intercept is found to be [-0.085, -0.049]  
+H0:α=0 is not captured by this interval, so was rejected.
+
+#### The Slope
+  
+* H0:β=0
+* HA:β≠0
+
 ```{r, echo=TRUE, tidy=TRUE}
 2*pt(q = 67.29879, df = 1063, lower.tail=FALSE)
 ```
 
+As p < .05, we reject H0. The 95% CI for b was found to [1.582, 1.677]. This 95% CI does not capture H0, therefore it was rejected.  
+
+There was a statistically significant positive relationship between the expression of pERK_N and BRAF_N. 
+
 ```{r, echo=TRUE, tidy=TRUE, fig.height=3, fig.width=7, fig.align="centre"}
-plot(pERK_N ~ BRAF_N, data = ds_filled_NaN, xlab = "BRAF_N", ylab = "pERK_N")
-abline(pERK_N_VS_BRAF_N, col = "red")
+pERK_N_VS_BRAF_N_XY <- ggplot(data=ds_filled_NaN, aes(x=BRAF_N, y=pERK_N, colour = class))
+pERK_N_VS_BRAF_N_XY + 
+  geom_point(alpha = I(0.9), size = 0.8) + 
+  stat_smooth(method = "lm", col = "black", size = 0.5) +
+  labs(title = 'pERK_N versus BRAF_N Protein Expression Scatter Plot',  
+       y = 'pERK_N', 
+       x = 'BRAF_N') +
+  theme(legend.title = element_blank(), axis.title = element_text(size=8), title = element_text(size=9)) +
+  annotate("text", x = 0.5, y = 1.3, label = "R Squared") + 
+  annotate("text", x = 0.5, y = 1.2, label = format(summary(lm(pERK_N ~ BRAF_N, data = ds_filled_NaN))$r.squared, digits = 3))
 ```
 
-
-
-_________________________
-
-## Statistical Analysis Part 2 - Two-sample t-tests PAIRED TWO SAMPLE T-TESTS
-
-The bar plots representing ITSN1_N and SOD1_N over all classes of mice were selected from the 'Data Exploration through Visualization' section of the analysis (displayed below). Selection for statistical analysis was performed in a qualitative fashion.  
-
- Protein      | Qualitative Observation and Proposed Quantitative Analysis
--------- | -----------------------------------------
-ITSN1_N       | The distributions and corresponding mean values occur in a series of pairs. It appears that first two components of each class (genotype and learning stimuli) are deterministic in the expression of ITSN1_N. This will be evaluated pair-wise using the two-sample t-test.
-SOD1_N | Expression of SOD1_N is determined predominantly by the learning stimuli applied. In the four classes of CS, the expression levels have tight distributions and similar means. In the four classes of SC, the expression levels have wide distributions, with varied means. This will be evaluated ...
-
-```{r, echo=FALSE, fig.height=3, fig.width=7, fig.align="centre"}
-grid.arrange(ITSN1_N_Hist, SOD1_N_Hist, nrow = 2)
-```
-
-
-
+### Data Preprocessing - Iteration 4
+#### Creating Columns for Paired t-test Analysis
+The following columns were created using the `mutate()` function. All classes were then dropped except 'c-CS-s' (this corresponds to the control group with normal genotype, saline treatment and CS learning).
 ```{r, echo=TRUE, tidy=TRUE}
 ds_filled_NaN <- ds_filled_NaN %>% mutate(d_ARC_BRAF = BRAF_N - ARC_N)
 ds_filled_NaN <- ds_filled_NaN %>% mutate(d_BRAF_DYRK1A = DYRK1A_N - BRAF_N)
@@ -571,7 +619,15 @@ ds_filled_NaN <- ds_filled_NaN %>% mutate(d_S6_SOD1 = SOD1_N - S6_N)
 ds_cCSs <- ds_filled_NaN[(ds_filled_NaN$class == 'c-CS-s'),]
 ```
 
-# ARC & BRAF for cCSs
+## Statistical Analysis Part 2 - Paired two-sample t-tests
+Analysis was conducted for 7 pairs of protein expression levels in all mice from the class 'c-CS-s'. These were considered dependent (paired) samples as the mice from each individual class were all exposed to the same set of variables.
+
+#### Critical Value - All Paris
+```{r, echo = TRUE}
+qt(p = 0.025, df = 119)
+```
+
+### ARC_N & BRAF_N for c-CS-s
 
 ```{r, echo=TRUE, tidy=TRUE}
 t.test(ds_cCSs$d_ARC_BRAF, 
@@ -587,7 +643,9 @@ granova.ds(
   )
 ```
 
-# BRAF & DYRK1A for cCSs
+The t* values are ± 1.98. As t = 27.72 is more extreme than + 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [0.24 0.27], which does not contain capture H0). There was a statistically significant mean difference between the expression of ARC_N and BRAF_N for the c-CS-s (n = 120).
+
+### BRAF_N & DYRK1A_N for c-CS-s
 
 ```{r, echo=TRUE, tidy=TRUE}
 t.test(ds_cCSs$d_BRAF_DYRK1A, 
@@ -603,7 +661,9 @@ granova.ds(
   )
 ```
 
-# DYRK1A & ITSN1_N for cCSs
+The t* values are ± 1.98. As t = 8.87 is more extreme than + 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [0.04 0.06], which does not contain capture H0). There was a statistically significant mean difference between the expression of BRAF_N and DYRK1A_N for the c-CS-s (n = 120).
+
+### DYRK1A_N & ITSN1_N for c-CS-s
 
 ```{r, echo=TRUE, tidy=TRUE}
 t.test(ds_cCSs$d_DYRK1A_ITSN1, 
@@ -619,7 +679,9 @@ granova.ds(
   )
 ```
 
-# ITSN1_N & pERK_N for cCSs
+The t* values are ± 1.98. As t = 34.22 is more extreme than + 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [0.18 0.20], which does not contain capture H0). There was a statistically significant mean difference between the expression of DYRK1A_N and ITSN1_N for the c-CS-s (n = 120).
+
+### ITSN1_N & pERK_N for c-CS-s
 
 ```{r, echo=TRUE, tidy=TRUE}
 t.test(ds_cCSs$d_ITSN1_pERK, 
@@ -635,7 +697,9 @@ granova.ds(
   )
 ```
 
-# pERK_N & pNUMB for cCSs
+The t* values are ± 1.98. As t = -0.70, t is less extreme than than -1.98, H0 cannot be rejected on critical value. The 95% CI of the mean difference is found to be [-0.02 0.01], H0 cannot be rejected on 95% CI. As p > 0.05, we fail to reject H0. There was not a statistically significant mean difference between the expression of ITSN1_N and pERK_N for the c-CS-s (n = 120).
+
+### pERK_N & pNUMB_N for c-CS-s
 
 ```{r, echo=TRUE, tidy=TRUE}
 t.test(ds_cCSs$d_pERK_pNUMB, 
@@ -645,26 +709,75 @@ t.test(ds_cCSs$d_pERK_pNUMB,
 
 ```{r, echo=TRUE, tidy=TRUE}
 granova.ds(
-  data.frame(ds_cCSs$ITSN1_N, ds_cCSs$pERK_N),
-  xlab = "ITSN1_N",
-  ylab = "pERK_N"
+  data.frame(ds_cCSs$pERK_N, ds_cCSs$pNUMB_N),
+  xlab = "pERK_N",
+  ylab = "pNUMB_N"
   )
 ```
 
+The t* values are ± 1.98. As t = -16.57 is more extreme than - 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [-0.22 -0.18], which does not contain capture H0). There was a statistically significant mean difference between the expression of pERK_N and pNUMB_N for the c-CS-s (n = 120).
 
-Then perform linear regression tests
+### pNUMB_N & S6_N for c-CS-s
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_pNUMB_S6, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$pNUMB_N, ds_cCSs$S6_N),
+  xlab = "pNUMB_N",
+  ylab = "S6_N"
+  )
+```
+
+The t* values are ± 1.98. As t = 3.89 is more extreme than + 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [0.02 0.07], which does not contain capture H0). There was a statistically significant mean difference between the expression of pNUMB_N and S6_N for the c-CS-s (n = 120).
+
+### S6_N & SOD1_N for c-CS-s
+
+```{r, echo=TRUE, tidy=TRUE}
+t.test(ds_cCSs$d_S6_SOD1, 
+       mu = 0, 
+       alternative = "two.sided")
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+granova.ds(
+  data.frame(ds_cCSs$S6_N, ds_cCSs$SOD1_N),
+  xlab = "S6_N",
+  ylab = "SOD1_N"
+  )
+```
+
+The t* values are ± 1.98. As t = -10.45 is more extreme than - 1.98, H0 should be rejected (additionally the 95% CI of the mean difference is found to be [-0.15 -0.10], which does not contain capture H0). There was a statistically significant mean difference between the expression of S6_N and SOD1_N for the c-CS-s (n = 120).
 
 
-http://www.rpubs.com/smcclatchy/scatterplots
-http://www.sthda.com/english/wiki/ggally-r-package-extension-to-ggplot2-for-correlation-matrix-and-survival-plots-r-software-and-data-visualization
-https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html
-http://rmarkdown.rstudio.com/lesson-3.html
-http://rmarkdown.rstudio.com/authoring_rcodechunks.html
+### Discussion 
 
-## Appendix
+The following was determined over the duration of the investigation,
+  
+* ITSN1_N vs DYRK1A_N (over all classes of mice) had a statistically significant linearly dependent positive relationship.
+* pERK_N vs DYRK1A_N (over all classes of mice) had a statistically significant linearly dependent positive relationship.
+* pERK_N vs BRAF_N (over all classes of mice) had a statistically significant linearly dependent positive relationship.
+  
+This is signficant as it shows the relationship between these expression of proteins is nto affected by the variables of the experiment.
 
-# References
+* There was a statistically significant mean difference between the expression of ARC_N and BRAF_N for the c-CS-s.
+* There was a statistically significant mean difference between the expression of BRAF_N and DYRK1A_N for the c-CS-s.
+* There was a statistically significant mean difference between the expression of DYRK1A_N and ITSN1_N for the c-CS-s.
+* There was not a statistically significant mean difference between the expression of ITSN1_N and pERK_N for the c-CS-s.
+* There was a statistically significant mean difference between the expression of pERK_N and pNUMB_N for the c-CS-s.
+* There was a statistically significant mean difference between the expression of pNUMB_N and S6_N for the c-CS-s.
+* There was a statistically significant mean difference between the expression of S6_N and SOD1_N for the c-CS-s. 
 
+The strengths of the investigation included high sample size (overall and in sub-categories), use of various visualizations for data exploration and interprettation, different statistical analysis methods. Limitations included the complex nature of the data set. For example only 7 paired t-tests could reasonably be performed. For the class c-CS-s, this doesn't represent every possible combination. Comparisons between classes inside individual target proteins would have also been a rich source of data.
+
+### Conclusion
+The ‘Mice Protein Expression Data Set’, [82 attributes by 1080 observations] was imported into the RStudio interactive environment, explored, cleaned and analysed. Analysis was performed using paired t-tests and linear regression techniques. A series of visualizations, including scatter plot matrices, box plots and dependent sample assessment plots were used. It was determined that several of the proteins had statistically significant linear relationships. Only one pair of classes tested had no statistically significant mean difference, indicating a high degree of expression variablitity for over the class c-CS-s.
+
+### References (see last page)
 [^1]: Higuera, C., Gardiner, K. J., & Cios, K. J. (2015). Self-Organizing Feature Maps Identyfy Proteins Critical to Learning in a Mouse Model of Down Syndrome. PLoS ONE, 10(6).
 [^2]: Ahmed, M. M., Dhanasekaran, A. R., Block, A., Tong, S., Costa, A. C. S., Stasko, M., & Gardiner, K. J. (2014). Protein Dynamics Associated with Failed and Rescues Learning in the TS65Dn Mouse Model of Down Syndrome. PLoS ONE, 10(3).
 [^3]: Costa, A., Scott-McKean, J., & Stasko, M. (2008). Acute injections of the NMDA receptor antagonist memantine rescue performance deficits of the Ts65Dn mouse model of Down syndrome on a fear conditioning test. Neuropsychopharmacology, 33(7), 1624-1632.
@@ -674,19 +787,34 @@ http://rmarkdown.rstudio.com/authoring_rcodechunks.html
 [^7]: http://archive.ics.uci.edu/ml/ 
 [^8]: https://docs.google.com/spreadsheets/d/1scXPvhOh3kmANCAhf1X_CLwJQckOJA-WMP_f9lHVri4/edit?usp=sharing, CONTROL MICE PROTEINS http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s003, TRISOMIC MICE PROTEINS, http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pone.0129126.s004 
 
+------
 
-Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. Computing in Science & Engineering, 9(3), 90-95.
-McKinney, W. (2010). Data Structures for Statistical Computing in Python.
-
-Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., . . . Duchesnay, É. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830.
-Pérez, F., & Granger, B. E. (2007). IPython: A System for Interactive Scientific Computing. Computing in Science & Engineering, 9(3), 21-29. 
-
-R Chunk Options https://yihui.name/knitr/options/
-R Density Plot Options http://www.sthda.com/english/wiki/ggplot2-density-plot-quick-start-guide-r-software-and-data-visualization 
-
-
+###Appendix - Not considered for grading
+```{r, echo=TRUE, tidy=TRUE}
+summary(ds)
+```
 
 ```{r, echo=TRUE, tidy=TRUE}
-write.csv(ds_filled_NaN, file = "mouse_data_preprocessed.csv")
-ITSN1_N_Data <- gsheet2tbl('https://docs.google.com/spreadsheets/d/131cuxxEJ__jexUuEcfjwoDvRJq1FR3XfbP5YAzSD5Bw/edit?usp=sharing')
+colnames(ds)
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+MouseID <- ds$MouseID
+MouseID
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+table(ds_filtered$Genotype)
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+table(ds_filtered$Treatment)
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+table(ds_filtered$Behavior)
+```
+
+```{r, echo=TRUE, tidy=TRUE}
+table(ds_filtered$class)
 ```
